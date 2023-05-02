@@ -1,0 +1,25 @@
+.leftContainer {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  align-items: center;
+  /*   background-color: rgb(209, 200, 200);
+ */
+}
+
+.rightContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /*   background-color: rgb(128, 122, 122);
+ */
+}
+
+.estacionImgContainer {
+  opacity: 1;
+}
+
+.estacionNoImg {
+  opacity: 0.2;
+}
