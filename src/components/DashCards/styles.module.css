@@ -1,0 +1,19 @@
+.cardsBgc {
+  background-color: rgb(35, 48, 68);
+}
+
+.percentageNegative {
+  color: rgb(244, 67, 54);
+  background-color: rgba(244, 67, 54, 0.1);
+  border-radius: 4px;
+  font-size: 14px;
+  padding: 2.5px;
+}
+
+.percentagePositive {
+  color: rgb(76, 175, 80);
+  background-color: rgba(76, 175, 80, 0.1);
+  border-radius: 4px;
+  font-size: 14px;
+  padding: 2.5px;
+}

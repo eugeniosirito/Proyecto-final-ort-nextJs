@@ -1,11 +1,12 @@
 import React from 'react'
-import { AppBar, Toolbar, IconButton, Typography, Button } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu';
+import styles from './styles.module.css';
+import { AppBar, Toolbar, IconButton, Typography, Button, Grid, Box } from '@mui/material'
 
 const Header = () => {
   return (
     <>
-      <AppBar position="static">
+      <AppBar position="static" elevation={1} sx={{ borderBottom: '1px solid white', backgroundColor: 'rgb(27, 38, 53)' }}>
         <Toolbar>
           <IconButton
             size="large"
