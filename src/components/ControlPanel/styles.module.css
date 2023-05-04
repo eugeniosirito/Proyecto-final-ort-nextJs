@@ -5,3 +5,23 @@
 .estacionNoImg {
   opacity: 0.2;
 }
+
+.btnRegistrar {
+  background-color: #1976d2;
+}
+
+.btnActivar {
+  background-color: #34953b;
+}
+
+.btnDesactivar {
+  background-color: #c62828;
+}
+
+.btnActivar:hover {
+  background-color: #1b5e20;
+}
+
+.btnDesactivar:hover {
+  background-color: #a42222;
+}

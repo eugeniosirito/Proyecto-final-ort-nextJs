@@ -1,9 +1,11 @@
+import { Inter } from 'next/font/google'
 import Header from '@/components/Header'
 import { Grid } from '@mui/material'
 import SideMenu from '@/components/SideMenu'
+import DashCards from '@/components/DashCards'
 import Footer from '@/components/Footer'
 
-export default function Home() {
+export default function Dashboard() {
   return (
     <>
       <Header />
@@ -12,6 +14,15 @@ export default function Home() {
           <SideMenu />
         </Grid>
         <Grid lg={10.5} md={10} sm={9} xs={12} sx={{ backgroundColor: 'rgb(27, 38, 53)' }}>
+          <DashCards />
+          {/* <Grid display={'flex'} xs={12} className={styles.fatherContainer}>
+            <Grid lg={6} xs={12} className={styles.leftContainer}>
+              <SuscribirEstacion />
+            </Grid>
+            <Grid lg={6} xs={12} className={styles.rightContainer}>
+              <ControlPanel />
+            </Grid>
+          </Grid > */}
         </Grid>
         <Footer />
       </Grid>

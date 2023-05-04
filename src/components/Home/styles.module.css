@@ -1,10 +1,7 @@
 .leftContainer {
   display: flex;
   flex-direction: column;
-  /* justify-content: center; */
   align-items: center;
-  /*   background-color: rgb(209, 200, 200);
- */
 }
 
 .rightContainer {
@@ -12,8 +9,6 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /*   background-color: rgb(128, 122, 122);
- */
 }
 
 .estacionImgContainer {
@@ -22,4 +17,13 @@
 
 .estacionNoImg {
   opacity: 0.2;
+}
+
+.sideMenu {
+  background-color: rgb(35, 48, 68);
+  height: 100vh;
+}
+
+.mainBgc {
+  background-color: rgb(27, 38, 53);
 }

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Grid, Container, TextField, Button, Typography, AppBar, Toolbar, IconButton, Select, MenuItem, SelectChangeEvent, FormControl, InputLabel } from '@mui/material'
+import clsx from 'clsx';
+import { Grid, Button, Select, MenuItem, SelectChangeEvent, FormControl, InputLabel } from '@mui/material'
 import Image from 'next/image'
 import pngegg from '../../assets/pngegg.png'
 import styles from './styles.module.css';
@@ -14,7 +15,7 @@ const ControlPanel = () => {
   };
   return (
     <>
-      <Image src={pngegg} height={400} alt={''} className={age === '' ? styles.estacionNoImg : styles.estacionImgContainer} />
+      <Image src={pngegg} height={400} alt={''} className={age === '' ? styles.estacionNoImg : styles.estacionImgContainer} style={{ marginTop: '38px' }} />
       <Grid marginTop={4} sm={12} xs={12} display={'flex'} flexDirection={'column'}>
         <FormControl variant="standard" sx={{ m: 1, minWidth: 250 }}>
           <InputLabel id="demo-simple-select-standard-label">Selecciona un modelo</InputLabel>
@@ -36,7 +37,7 @@ const ControlPanel = () => {
             <MenuItem value={30}>TT-9234234-BFS</MenuItem>
           </Select>
         </FormControl>
-        <Grid display={'flex'} justifyContent={'center'} container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 2 }} padding={2}>
+        <Grid display={'flex'} justifyContent={'center'} container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 2 }} marginTop={0}>
           <Grid item>
             <Button variant="contained" className={styles.btnRegistrar} >Modificar</Button>
           </Grid>
@@ -49,20 +50,26 @@ const ControlPanel = () => {
             <Button variant="contained" className={styles.btnRegistrar} >Ver en el mapa</Button>
           </Grid>
         </Grid>
-        <Button
-          variant="contained"
-          className={styles.btnRegistrar}
-          color={activar === 'Activar' ? 'success' : 'error'}
-          onClick={() => {
-            if (activar === 'Activar') {
-              setActivar('Desactivar')
-            } else {
-              setActivar('Activar')
-            }
-          }}
-        >
-          {activar}
-        </Button>
+        <Grid marginTop={2} marginBottom={2}>
+          <Button
+            fullWidth
+            variant="contained"
+            className={clsx({
+              [styles.btnActivar]: activar === 'Activar',
+              [styles.btnDesactivar]: activar === 'Desactivar'
+            })}
+            color={activar === 'Activar' ? 'success' : 'error'}
+            onClick={() => {
+              if (activar === 'Activar') {
+                setActivar('Desactivar')
+              } else {
+                setActivar('Activar')
+              }
+            }}
+          >
+            {activar}
+          </Button>
+        </Grid>
       </Grid>
     </>
   )
