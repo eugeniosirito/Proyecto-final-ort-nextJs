@@ -18,6 +18,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/components/SuscribirEstacion/withSuscribirEstacion.jsx", "src/components/VectorMap/index.jsx", "src/components/VectorMapV2/index.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/components/SuscribirEstacion/withSuscribirEstacion.jsx", "src/components/VectorMap/index.jsx", "src/components/VectorMapV2/index.jsx", "src/components/Charts/Linecharts/linechart.js", "src/components/Charts/Linecharts"],
   "exclude": ["node_modules"]
 }

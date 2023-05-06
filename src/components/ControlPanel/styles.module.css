@@ -1,27 +1,17 @@
-.estacionImgContainer {
-  opacity: 1;
+.adminCardClickable {
+  align-items: center;
+  background-color: rgb(35, 48, 68);
+  border: 1px solid rgba(255, 255, 255, 0.23);
+  border-radius: 4px;
+  box-shadow: 2px 3px 6px 0px #000;
+  display: flex;
+  justify-content: center;
 }
 
-.estacionNoImg {
-  opacity: 0.2;
-}
-
-.btnRegistrar {
-  background-color: #1976d2;
-}
-
-.btnActivar {
-  background-color: #34953b;
-}
-
-.btnDesactivar {
-  background-color: #c62828;
-}
-
-.btnActivar:hover {
-  background-color: #1b5e20;
-}
-
-.btnDesactivar:hover {
-  background-color: #a42222;
+.adminCardClickable:hover {
+  background-color: rgb(24, 33, 46);
+  border-bottom: none;
+  box-shadow: 0px 0px 0px 0px #000;
+  cursor: pointer;
+  transition: 0.1s;
 }
