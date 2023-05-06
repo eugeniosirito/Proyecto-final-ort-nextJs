@@ -20,7 +20,7 @@ const Header = () => {
           <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
             Aplicación
           </Typography>
-          <Button color="inherit">Login</Button>
+          <Button color="inherit" href='/sign-up'>Login</Button>
         </Toolbar>
       </AppBar>
     </>

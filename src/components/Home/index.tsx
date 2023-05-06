@@ -4,7 +4,7 @@ import styles from './styles.module.css';
 import SuscribirEstacion from '../SuscribirEstacion';
 import ControlPanel from '../ControlPanel';
 import SideMenu from '../SideMenu';
-import DashCards from '../DashCards';
+import DashCards from '../Dashboard';
 import Footer from '../Footer';
 import Header from '../Header';
 
