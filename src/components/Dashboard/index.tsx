@@ -87,12 +87,13 @@ const DashCards = () => {
         </Grid>
       </Grid>
       <Grid container lg={12}>
-        <Grid container lg={7} paddingLeft={2} paddingY={2}>
+        <Grid container lg={7} paddingLeft={2} paddingY={2} paddingRight={3}>
           <Grid item lg={12} md={12} style={{ height: '300px' }}>
             <VectorMapV2 />
           </Grid>
         </Grid>
-        <Grid container lg={5} rowSpacing={{ lg: 1, sm: 2, xs: 2 }} columnSpacing={{ lg: 1, md: 2 }} paddingLeft={2} paddingY={2}>
+        <Grid container lg={5} rowSpacing={{ lg: 1, sm: 2, xs: 2 }} columnSpacing={{ lg: 1, md: 2 }} paddingLeft={2} paddingY={2}
+          style={{ marginTop: '16px', height: '300px', backgroundColor: "rgb(35, 48, 68)" }}>
           <DoughnutChart />
         </Grid>
       </Grid>
