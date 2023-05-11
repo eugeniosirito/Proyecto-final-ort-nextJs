@@ -2,6 +2,8 @@ import React from 'react';
 import { Button, Grid, TextField, Typography } from '@mui/material';
 import styles from './styles.module.css';
 import Link from 'next/link';
+import Image from 'next/image';
+import city from '../../assets/city.jpg'
 
 const SignUp = () => {
 
@@ -44,8 +46,23 @@ const SignUp = () => {
 
   return (
     <>
-      <Grid container className={styles.signUpBgc}>
+      <Grid display={'flex'}>
         <Grid
+          item
+          className={styles.leftContainer}
+          container
+          display={'flex'}
+          flexDirection={'column'}
+          justifyContent={'center'}
+          alignItems={'center'}
+          margin={'auto'}
+          padding={5}
+          xs={8}
+          height={'100vh'}
+        >
+        </Grid>
+        <Grid
+          item
           className={styles.signUpContainer}
           container
           display={'flex'}
@@ -55,7 +72,7 @@ const SignUp = () => {
           margin={'auto'}
           padding={5}
           xs={4}
-          borderRadius={4}
+          height={'100vh'}
         >
           {!isSignUp ? (
             <>
@@ -105,7 +122,6 @@ const SignUp = () => {
               </Button>
             </>
           )}
-
         </Grid>
       </Grid>
     </>

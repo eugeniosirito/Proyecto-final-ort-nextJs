@@ -10,6 +10,7 @@ import TrafficOutlinedIcon from '@mui/icons-material/TrafficOutlined';
 import HandymanOutlinedIcon from '@mui/icons-material/HandymanOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import styles from './styles.module.css';
+import HomeTab from '../HomeTab';
 
 const ControlPanelV2 = () => {
 
@@ -69,6 +70,7 @@ const ControlPanelV2 = () => {
           </Grid>
         ))}
       </Grid>
+      <HomeTab />
     </>
   )
 };

@@ -1,7 +1,11 @@
 .signUpContainer {
   background-color: rgb(35, 48, 68);
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  box-shadow: 0px 0px 12px 2px black;
+}
+
+.leftContainer {
+  background-image: url(https://images.unsplash.com/photo-1502899576159-f224dc2349fa?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MTd8fHxlbnwwfHx8fA%3D%3D&w=1000&q=80);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }

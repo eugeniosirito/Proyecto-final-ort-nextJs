@@ -59,32 +59,34 @@ const SuscribirEstacion = () => {
 
   return (
     <>
-      <Typography marginTop={4} marginBottom={2} color={'white'}>Contacto</Typography>
-      <Grid display={'flex'} justifyContent={'center'} container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 2 }} padding={2}>
-        {contactValues.map((item, i) => (
-          <Grid item key={i}>
-            <TextField name={item.name} label={item.label} variant="outlined" onChange={handleChange} sx={{ backgroundColor: 'white' }} />
-          </Grid>
-        ))}
-      </Grid>
-      <Typography marginTop={5} marginBottom={2} color={'white'}>Estación</Typography>
-      <Grid display={'flex'} justifyContent={'center'} container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 2 }} padding={2}>
-        {stationValues.map((item, i) => (
-          <Grid item key={i}>
-            <TextField name={item.name} label={item.label} variant="outlined" onChange={handleChange} sx={{ backgroundColor: 'white' }} />
-          </Grid>
-        ))}
-      </Grid>
-      <Typography marginTop={5} marginBottom={2} color={'white'}>Ubicación</Typography>
-      <Grid display={'flex'} justifyContent={'center'} container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 2 }} padding={1}>
-        {locationValues.map((item, i) => (
-          <Grid item key={i}>
-            <TextField name={item.name} label={item.label} variant="outlined" onChange={handleChange} sx={{ backgroundColor: 'white' }} />
-          </Grid>
-        ))}
-      </Grid>
-      <Grid padding={1}>
-        <Button variant="contained" className={styles.btnRegistrar} color="success" size="large" onClick={handleGuardar}>Registrar</Button>
+      <Grid lg={12} xs={12} className={styles.leftContainer}>
+        <Typography marginTop={4} marginBottom={2} color={'white'}>Contacto</Typography>
+        <Grid display={'flex'} justifyContent={'center'} container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 2 }} padding={2}>
+          {contactValues.map((item, i) => (
+            <Grid item key={i}>
+              <TextField name={item.name} label={item.label} variant="outlined" onChange={handleChange} sx={{ backgroundColor: 'white' }} />
+            </Grid>
+          ))}
+        </Grid>
+        <Typography marginTop={5} marginBottom={2} color={'white'}>Estación</Typography>
+        <Grid display={'flex'} justifyContent={'center'} container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 2 }} padding={2}>
+          {stationValues.map((item, i) => (
+            <Grid item key={i}>
+              <TextField name={item.name} label={item.label} variant="outlined" onChange={handleChange} sx={{ backgroundColor: 'white' }} />
+            </Grid>
+          ))}
+        </Grid>
+        <Typography marginTop={5} marginBottom={2} color={'white'}>Ubicación</Typography>
+        <Grid display={'flex'} justifyContent={'center'} container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 2 }} padding={1}>
+          {locationValues.map((item, i) => (
+            <Grid item key={i}>
+              <TextField name={item.name} label={item.label} variant="outlined" onChange={handleChange} sx={{ backgroundColor: 'white' }} />
+            </Grid>
+          ))}
+        </Grid>
+        <Grid padding={1}>
+          <Button variant="contained" className={styles.btnRegistrar} color="success" size="large" onClick={handleGuardar}>Registrar</Button>
+        </Grid>
       </Grid>
     </>
   )
