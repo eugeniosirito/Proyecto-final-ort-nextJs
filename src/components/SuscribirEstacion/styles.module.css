@@ -8,3 +8,7 @@
   flex-direction: column;
   align-items: center;
 }
+
+.stepperStyles span {
+  color: white;
+}
