@@ -26,31 +26,33 @@ const SuscribirEstacion = () => {
     }
     dataPublication: string;
     location: {
-      coordinates: number[],
+      coordinates: string[],
       metadata: object
     };
-    //longitude: number;
-    //latitude: number;
-    // desc: string;
   }
-  const [values, setValues] = useState<Values>({
-    name: '',
-    lastName: '',
-    email: '',
-    model: '',
+
+  const [superObjeto, setSuperObjeto] = useState<Values>({
     description: {
       value: '',
-      metadata: {
+      metadata: {},
+    },
+    user: {
+      value: {
         name: '',
         lastName: '',
-        model: ''
+        email: '',
+        metadata: {},
       }
     },
-    sensors: 0,
+    sensors: {
+      value: [],
+      metadata: {},
+    },
     dataPublication: '',
-    longitude: 0,
-    latitude: 0,
-    desc: ''
+    location: {
+      coordinates: [],
+      metadata: {},
+    }
   })
 
   const [contactValues, setContactValues] = useState([
@@ -72,15 +74,15 @@ const SuscribirEstacion = () => {
     { label: 'Descripción', name: 'desc', value: '' },
   ]);
 
-  const [estaciones, setEstaciones] = useState({});
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setValues(prevValores => ({ ...prevValores, [name]: value }));
+  const handleChange = (fieldName: any, value: any) => {
+    setSuperObjeto(prevState => ({
+      ...prevState,
+      [fieldName]: value,
+    }));
   };
 
   const handleGuardar = () => {
-    console.log(values);
+    console.log(superObjeto);
     suscribirEstacion();
   };
 
@@ -88,7 +90,7 @@ const SuscribirEstacion = () => {
 
   const suscribirEstacion = async () => {
     try {
-      const resultado = await postEstacion(values);
+      const resultado = await postEstacion(superObjeto);
       console.log(resultado, "post correcto");
     } catch (error) {
       console.error(error);
@@ -143,6 +145,45 @@ const SuscribirEstacion = () => {
     setActiveStep(0);
   };
 
+  const fields = [
+    {
+      label: 'Description',
+      stateKey: 'description',
+      value: superObjeto.description.value,
+      handleChange: (value: any) => handleChange('description', { value, metadata: {} }),
+    },
+    {
+      label: 'Name',
+      stateKey: 'user',
+      value: superObjeto.user.value.name,
+      handleChange: (value: any) => handleChange('user', { value: { ...superObjeto.user.value, name: value }, metadata: {} }),
+    },
+    {
+      label: 'Last Name',
+      stateKey: 'user',
+      value: superObjeto.user.value.lastName,
+      handleChange: (value: any) => handleChange('user', { value: { ...superObjeto.user.value, lastName: value }, metadata: {} }),
+    },
+    {
+      label: 'Email',
+      stateKey: 'user',
+      value: superObjeto.user.value.email,
+      handleChange: (value: any) => handleChange('user', { value: { ...superObjeto.user.value, email: value }, metadata: {} }),
+    },
+    {
+      label: 'Data Publication',
+      stateKey: 'dataPublication',
+      value: superObjeto.dataPublication,
+      handleChange: (value: any) => handleChange('dataPublication', value),
+    },
+    {
+      label: 'Coordinates',
+      stateKey: 'location',
+      value: superObjeto.location.coordinates.join(', '),
+      handleChange: (value: any) => handleChange('location', { coordinates: value.split(', '), metadata: {} }),
+    },
+  ];
+
   return (
     <>
       <Box paddingTop={5}>
@@ -192,28 +233,30 @@ const SuscribirEstacion = () => {
             <React.Fragment>
               {activeStep === 0 ? (
                 <Grid lg={12} xs={12}>
-                  <Grid display={'flex'} justifyContent={'center'} container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 4 }} padding={12}>
-                    {contactValues.map((item, i) => (
-                      <Grid item key={i}>
-                        <TextField name={item.name} label={item.label} variant="outlined" onChange={handleChange}
-                          sx={{
-                            '& .MuiOutlinedInput-notchedOutline': {
-                              borderColor: 'rgba(255, 255, 255, 0.63)',
-                            },
-                            '& .MuiInputLabel-root': {
-                              color: 'rgba(255, 255, 255, 0.63)',
-                            },
-                          }} />
-                      </Grid>
-                    ))}
-                  </Grid>
+                  {fields.map((field, index) => (
+                    <TextField
+                      key={index}
+                      type="text"
+                      label={field.label}
+                      value={field.value}
+                      onChange={e => field.handleChange(e.target.value)}
+                      sx={{
+                        '& .MuiOutlinedInput-notchedOutline': {
+                          borderColor: 'rgba(255, 255, 255, 0.63)',
+                        },
+                        '& .MuiInputLabel-root': {
+                          color: 'rgba(255, 255, 255, 0.63)',
+                        },
+                      }}
+                    />
+                  ))}
                 </Grid>
               ) : (activeStep === 1 ? (
                 <Grid lg={12} xs={12}>
                   <Grid display={'flex'} justifyContent={'center'} container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 4 }} padding={12}>
                     {stationValues.map((item, i) => (
                       <Grid item key={i}>
-                        <TextField name={item.name} label={item.label} variant="outlined" onChange={handleChange} sx={{
+                        <TextField name={item.name} label={item.label} variant="outlined" sx={{
                           '& .MuiOutlinedInput-notchedOutline': {
                             borderColor: 'rgba(255, 255, 255, 0.63)',
                           },
@@ -230,7 +273,7 @@ const SuscribirEstacion = () => {
                   <Grid display={'flex'} justifyContent={'center'} container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 4 }} padding={12}>
                     {locationValues.map((item, i) => (
                       <Grid item key={i}>
-                        <TextField name={item.name} label={item.label} variant="outlined" onChange={handleChange} sx={{
+                        <TextField name={item.name} label={item.label} variant="outlined" sx={{
                           '& .MuiOutlinedInput-notchedOutline': {
                             borderColor: 'rgba(255, 255, 255, 0.63)',
                           },
