@@ -1,7 +1,11 @@
 import axios from "axios";
 
+/* getEstaciones mockeado a modo de ejemplo con mockapi.io */
+
 export const getEstaciones = async () => {
-  const { data } = await axios.get("http://localhost:3000/estaciones");
+  const { data } = await axios.get(
+    "https://646faee909ff19b12087a570.mockapi.io/postEstacion"
+  );
   return data;
 };
 
@@ -10,9 +14,11 @@ export const getEstacion = async (id: string) => {
   return data;
 };
 
+/* postEstaciones mockeado a modo de ejemplo con mockapi.io */
+
 export const postEstacion = async (estacion: any) => {
   const { data } = await axios.post(
-    "http://localhost:3000/estaciones",
+    "https://646faee909ff19b12087a570.mockapi.io/postEstacion",
     estacion
   );
   return data;

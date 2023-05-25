@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Card, CardActions, CardContent, Grid, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material';
 import DoughnutChart from '../Charts/DoughnutChart';
 import LineChart from '../Charts/LineChart';
 import styles from './styles.module.css';
 import VectorMapV2 from '../VectorMapV2';
+import { getEstaciones } from '@/services';
 
 const DashCards = () => {
 
@@ -38,7 +39,32 @@ const DashCards = () => {
     },
   ]
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getEstaciones();
+        setEstaciones(data);
+        console.log(data);
+      } catch (error) {
+        console.error("ERROR", error);
+      }
+    };
+    fetchData();
+  }, []);
+
   const [age, setAge] = useState('');
+  const [estaciones, setEstaciones] = useState([{
+    id: '',
+    name: '',
+    lastName: '',
+    model: '',
+    description: '',
+    sensors: 0,
+    dataPublication: '',
+    longitude: 0,
+    latitude: 0,
+    desc: '',
+  }]);
 
   const handleChange = (event: SelectChangeEvent) => {
     setAge(event.target.value);
@@ -48,21 +74,18 @@ const DashCards = () => {
     <>
       <Grid container display={'flex'} flexDirection={'column'} lg={12}>
         <Typography textAlign={'center'} paddingLeft={2} paddingY={2} paddingBottom={0} color={'white'} variant='h5'>Selecciona tu estación</Typography>
-        <Grid lg={12} paddingLeft={2} paddingY={2}>
+        <Grid lg={12} paddingLeft={2} paddingY={2} >
           <Select fullWidth sx={{ backgroundColor: 'rgb(35, 48, 68)', color: 'white' }}
             value={age}
             onChange={handleChange}
             label="Age"
           >
-            <MenuItem value="Todas">Todas</MenuItem>
-            <MenuItem value={10}>AR-288234-BFS</MenuItem>
-            <MenuItem value={20}>AJ-4234234-BFS</MenuItem>
-            <MenuItem value={30}>ZC-6523424-BFS</MenuItem>
-            <MenuItem value={30}>DS-1234234-BFS</MenuItem>
-            <MenuItem value={30}>RR-4299234-BFS</MenuItem>
-            <MenuItem value={30}>TT-9234234-BFS</MenuItem>
+            {estaciones.map((item, i) => (
+              <MenuItem value={item.id} key={i}>{item.id}</MenuItem>
+            ))}
           </Select>
         </Grid>
+
         <Grid container display={'flex'} flexDirection={'row'} lg={12}>
           <Grid container lg={4} rowSpacing={{ lg: 1, sm: 2, xs: 2 }} columnSpacing={{ lg: 1, md: 2 }} paddingLeft={2} paddingY={2}>
             {testCards.map((card, index) => (
