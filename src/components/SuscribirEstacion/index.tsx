@@ -8,23 +8,44 @@ const SuscribirEstacion = () => {
   /* acá se guarda la estación */
 
   interface Values {
-    name: string;
-    lastName: string;
-    email: string;
-    model: string;
-    description: string;
-    sensors: number;
+    description: {
+      value: string;
+      metadata: object
+    };
+    user: {
+      value: {
+        name: string;
+        lastName: string;
+        email: string;
+        metadata: object
+      }
+    };
+    sensors: {
+      value: [],
+      metadata: object
+    }
     dataPublication: string;
-    longitude: number;
-    latitude: number;
-    desc: string;
+    location: {
+      coordinates: number[],
+      metadata: object
+    };
+    //longitude: number;
+    //latitude: number;
+    // desc: string;
   }
   const [values, setValues] = useState<Values>({
     name: '',
     lastName: '',
     email: '',
     model: '',
-    description: '',
+    description: {
+      value: '',
+      metadata: {
+        name: '',
+        lastName: '',
+        model: ''
+      }
+    },
     sensors: 0,
     dataPublication: '',
     longitude: 0,
