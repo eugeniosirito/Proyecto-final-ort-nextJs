@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Grid, TextField, Button, Typography, Box, Stepper, Step, StepLabel } from '@mui/material'
 import styles from './styles.module.css';
+import { getEstacion, getEstaciones, postEstacion } from "@/services";
 
 const SuscribirEstacion = () => {
 
@@ -50,6 +51,8 @@ const SuscribirEstacion = () => {
     { label: 'Descripción', name: 'desc', value: '' },
   ]);
 
+  const [estaciones, setEstaciones] = useState({});
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setValues(prevValores => ({ ...prevValores, [name]: value }));
@@ -57,6 +60,18 @@ const SuscribirEstacion = () => {
 
   const handleGuardar = () => {
     console.log(values);
+    suscribirEstacion();
+  };
+
+  /* llamado a las apis */
+
+  const suscribirEstacion = async () => {
+    try {
+      const resultado = await postEstacion(values);
+      console.log(resultado, "post correcto");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   /* acá empieza el step */
