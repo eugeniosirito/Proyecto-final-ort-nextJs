@@ -8,6 +8,8 @@ const SuscribirEstacion = () => {
 
   /* acá se guarda la estación y sensor */
 
+  /* obligatorio coordenadas y descripción */
+
 
   const [ingresoSensor, setIngresoSensor] = useState({
     description: {
@@ -22,25 +24,15 @@ const SuscribirEstacion = () => {
 
   const [ingresoEstacion, setIngresoEstacion] = useState<IngresoEstacionValues>({
     description: {
+      metadata: {},
       value: '',
-      metadata: {},
     },
-    user: {
-      value: {
-        name: '',
-        lastName: '',
-        email: '',
-        metadata: {},
-      }
-    },
-    sensors: {
-      value: [],
-      metadata: {},
-    },
-    dataPublication: '',
     location: {
       coordinates: [],
       metadata: {},
+    },
+    user: {
+      value: 'user_15'
     }
   })
 
@@ -125,34 +117,10 @@ const SuscribirEstacion = () => {
 
   const ingresoEstacionFields = [
     {
-      label: 'Name',
-      stateKey: 'user',
-      value: ingresoEstacion.user.value.name,
-      handleChange: (value: any) => handleChange('user', { value: { ...ingresoEstacion.user.value, name: value }, metadata: {} }),
-    },
-    {
-      label: 'Last Name',
-      stateKey: 'user',
-      value: ingresoEstacion.user.value.lastName,
-      handleChange: (value: any) => handleChange('user', { value: { ...ingresoEstacion.user.value, lastName: value }, metadata: {} }),
-    },
-    {
-      label: 'Email',
-      stateKey: 'user',
-      value: ingresoEstacion.user.value.email,
-      handleChange: (value: any) => handleChange('user', { value: { ...ingresoEstacion.user.value, email: value }, metadata: {} }),
-    },
-    {
       label: 'Description',
       stateKey: 'description',
       value: ingresoEstacion.description.value,
       handleChange: (value: any) => handleChange('description', { value, metadata: {} }),
-    },
-    {
-      label: 'Data Publication',
-      stateKey: 'dataPublication',
-      value: ingresoEstacion.dataPublication,
-      handleChange: (value: any) => handleChange('dataPublication', value),
     },
     {
       label: 'Coordinates',
@@ -180,23 +148,19 @@ const SuscribirEstacion = () => {
   const resumenFields = [
     {
       label: 'Nombre',
-      value: ingresoEstacion.user.value.name
+      value: ingresoEstacion.description.metadata
     },
     {
       label: 'Apellido',
-      value: ingresoEstacion.user.value.lastName
+      value: ingresoEstacion.description.metadata
     },
     {
       label: 'Email',
-      value: ingresoEstacion.user.value.email
+      value: ingresoEstacion.description.metadata
     },
     {
       label: 'Descripción',
       value: ingresoEstacion.description.value
-    },
-    {
-      label: 'Data publication',
-      value: ingresoEstacion.dataPublication,
     },
     {
       label: 'Coordenadas/Locación',
