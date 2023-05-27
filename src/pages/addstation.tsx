@@ -9,7 +9,9 @@ import Layout from '@/components/Layout/layout'
 export default function AddStation() {
   return (
     <Layout>
-      <SuscribirEstacion />
+      <div className='page-animation'>
+        <SuscribirEstacion />
+      </div>
     </Layout>
   )
 

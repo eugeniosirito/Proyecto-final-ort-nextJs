@@ -4,7 +4,9 @@ import Layout from '@/components/Layout/layout'
 export default function Dashboard() {
   return (
     <Layout>
-      <DashCards />
+      <div className='page-animation'>
+        <DashCards />
+      </div>
     </Layout>
   )
 }

@@ -2,36 +2,25 @@ import React, { useEffect, useState } from "react";
 import { Grid, TextField, Button, Typography, Box, Stepper, Step, StepLabel } from '@mui/material'
 import styles from './styles.module.css';
 import { getEstacion, getEstaciones, postEstacion } from "@/services";
+import { IngresoEstacionValues } from "@/utils/interfaces";
 
 const SuscribirEstacion = () => {
 
-  /* acá se guarda la estación */
+  /* acá se guarda la estación y sensor */
 
-  interface Values {
+
+  const [ingresoSensor, setIngresoSensor] = useState({
     description: {
-      value: string;
-      metadata: object
-    };
-    user: {
-      value: {
-        name: string;
-        lastName: string;
-        email: string;
-        metadata: object
-      }
-    };
-    sensors: {
-      value: [],
-      metadata: object
+      value: '',
+      metadata: {},
+    },
+    station_id: {
+      value: '',
+      metadata: '',
     }
-    dataPublication: string;
-    location: {
-      coordinates: string[],
-      metadata: object
-    };
-  }
+  })
 
-  const [superObjeto, setSuperObjeto] = useState<Values>({
+  const [ingresoEstacion, setIngresoEstacion] = useState<IngresoEstacionValues>({
     description: {
       value: '',
       metadata: {},
@@ -55,34 +44,23 @@ const SuscribirEstacion = () => {
     }
   })
 
-  const [contactValues, setContactValues] = useState([
-    { label: 'Nombre', name: 'name', value: '' },
-    { label: 'Apellido', name: 'lastName', value: '' },
-    { label: 'Mail', name: 'email', value: '' },
-  ]);
-
-  const [stationValues, setStationValues] = useState([
-    { label: 'Modelo', name: 'model', value: '' },
-    { label: 'Descripción', name: 'description', value: '' },
-    { label: 'Sensores', name: 'sensors', value: '' },
-    { label: 'Publicacion de información', name: 'dataPublication', value: '' },
-  ]);
-
-  const [locationValues, setLocationValues] = useState([
-    { label: 'Longitud', name: 'longitude', value: '' },
-    { label: 'Latitud', name: 'latitude', value: '' },
-    { label: 'Descripción', name: 'desc', value: '' },
-  ]);
-
   const handleChange = (fieldName: any, value: any) => {
-    setSuperObjeto(prevState => ({
+    setIngresoEstacion(prevState => ({
+      ...prevState,
+      [fieldName]: value,
+    }));
+  };
+
+  const handleChangeSensor = (fieldName: any, value: any) => {
+    setIngresoSensor(prevState => ({
       ...prevState,
       [fieldName]: value,
     }));
   };
 
   const handleGuardar = () => {
-    console.log(superObjeto);
+    console.log('ESTACION', ingresoEstacion);
+    console.log('SENSOR', ingresoSensor)
     suscribirEstacion();
   };
 
@@ -90,7 +68,7 @@ const SuscribirEstacion = () => {
 
   const suscribirEstacion = async () => {
     try {
-      const resultado = await postEstacion(superObjeto);
+      const resultado = await postEstacion(ingresoEstacion);
       console.log(resultado, "post correcto");
     } catch (error) {
       console.error(error);
@@ -99,7 +77,7 @@ const SuscribirEstacion = () => {
 
   /* acá empieza el step */
 
-  const steps = ['Ingresá tu cuenta', 'Información de la estación', 'Mas información'];
+  const steps = ['Estación', 'Sensor', 'Resumen'];
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set<number>());
 
@@ -145,44 +123,95 @@ const SuscribirEstacion = () => {
     setActiveStep(0);
   };
 
-  const fields = [
-    {
-      label: 'Description',
-      stateKey: 'description',
-      value: superObjeto.description.value,
-      handleChange: (value: any) => handleChange('description', { value, metadata: {} }),
-    },
+  const ingresoEstacionFields = [
     {
       label: 'Name',
       stateKey: 'user',
-      value: superObjeto.user.value.name,
-      handleChange: (value: any) => handleChange('user', { value: { ...superObjeto.user.value, name: value }, metadata: {} }),
+      value: ingresoEstacion.user.value.name,
+      handleChange: (value: any) => handleChange('user', { value: { ...ingresoEstacion.user.value, name: value }, metadata: {} }),
     },
     {
       label: 'Last Name',
       stateKey: 'user',
-      value: superObjeto.user.value.lastName,
-      handleChange: (value: any) => handleChange('user', { value: { ...superObjeto.user.value, lastName: value }, metadata: {} }),
+      value: ingresoEstacion.user.value.lastName,
+      handleChange: (value: any) => handleChange('user', { value: { ...ingresoEstacion.user.value, lastName: value }, metadata: {} }),
     },
     {
       label: 'Email',
       stateKey: 'user',
-      value: superObjeto.user.value.email,
-      handleChange: (value: any) => handleChange('user', { value: { ...superObjeto.user.value, email: value }, metadata: {} }),
+      value: ingresoEstacion.user.value.email,
+      handleChange: (value: any) => handleChange('user', { value: { ...ingresoEstacion.user.value, email: value }, metadata: {} }),
+    },
+    {
+      label: 'Description',
+      stateKey: 'description',
+      value: ingresoEstacion.description.value,
+      handleChange: (value: any) => handleChange('description', { value, metadata: {} }),
     },
     {
       label: 'Data Publication',
       stateKey: 'dataPublication',
-      value: superObjeto.dataPublication,
+      value: ingresoEstacion.dataPublication,
       handleChange: (value: any) => handleChange('dataPublication', value),
     },
     {
       label: 'Coordinates',
       stateKey: 'location',
-      value: superObjeto.location.coordinates.join(', '),
+      value: ingresoEstacion.location.coordinates.join(', '),
       handleChange: (value: any) => handleChange('location', { coordinates: value.split(', '), metadata: {} }),
     },
   ];
+
+  const ingresoSensorFields = [
+    {
+      label: 'Tipo de sensor',
+      stateKey: 'description',
+      value: ingresoSensor.description.value,
+      handleChangeSensor: (value: any) => handleChangeSensor('description', { value, metadata: {} }),
+    },
+    {
+      label: 'Estación',
+      stateKey: 'station_id',
+      value: ingresoSensor.station_id.value,
+      handleChangeSensor: (value: any) => handleChangeSensor('station_id', { value, metadata: {} }),
+    },
+  ]
+
+  const resumenFields = [
+    {
+      label: 'Nombre',
+      value: ingresoEstacion.user.value.name
+    },
+    {
+      label: 'Apellido',
+      value: ingresoEstacion.user.value.lastName
+    },
+    {
+      label: 'Email',
+      value: ingresoEstacion.user.value.email
+    },
+    {
+      label: 'Descripción',
+      value: ingresoEstacion.description.value
+    },
+    {
+      label: 'Data publication',
+      value: ingresoEstacion.dataPublication,
+    },
+    {
+      label: 'Coordenadas/Locación',
+      value: ingresoEstacion.location.coordinates,
+    },
+    {
+      label: 'Tipo de sensor',
+      value: ingresoSensor.description.value,
+    },
+    {
+      label: 'Estación N°',
+      value: ingresoSensor.station_id.value,
+    },
+  ]
+
 
   return (
     <>
@@ -233,47 +262,56 @@ const SuscribirEstacion = () => {
             <React.Fragment>
               {activeStep === 0 ? (
                 <Grid lg={12} xs={12}>
-                  {fields.map((field, index) => (
-                    <TextField
-                      key={index}
-                      type="text"
-                      label={field.label}
-                      value={field.value}
-                      onChange={e => field.handleChange(e.target.value)}
-                      sx={{
-                        '& .MuiOutlinedInput-notchedOutline': {
-                          borderColor: 'rgba(255, 255, 255, 0.63)',
-                        },
-                        '& .MuiInputLabel-root': {
-                          color: 'rgba(255, 255, 255, 0.63)',
-                        },
-                      }}
-                    />
-                  ))}
-                </Grid>
-              ) : (activeStep === 1 ? (
-                <Grid lg={12} xs={12}>
-                  <Grid display={'flex'} justifyContent={'center'} container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 4 }} padding={12}>
-                    {stationValues.map((item, i) => (
-                      <Grid item key={i}>
-                        <TextField name={item.name} label={item.label} variant="outlined" sx={{
+                  <Grid display={'flex'} justifyContent={'center'} container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 4 }} padding={12} >
+                    {ingresoEstacionFields.map((field, index) => (
+                      <TextField
+                        key={index}
+                        type="text"
+                        label={field.label}
+                        value={field.value}
+                        onChange={e => field.handleChange(e.target.value)}
+                        sx={{
                           '& .MuiOutlinedInput-notchedOutline': {
                             borderColor: 'rgba(255, 255, 255, 0.63)',
                           },
                           '& .MuiInputLabel-root': {
                             color: 'rgba(255, 255, 255, 0.63)',
                           },
-                        }} />
-                      </Grid>
+                          margin: '12px'
+                        }}
+                      />
+                    ))}
+                  </Grid>
+                </Grid>
+              ) : (activeStep === 1 ? (
+                <Grid lg={12} xs={12}>
+                  <Grid display={'flex'} justifyContent={'center'} container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 4 }} padding={12}>
+                    {ingresoSensorFields.map((field, index) => (
+                      <TextField
+                        key={index}
+                        type="text"
+                        label={field.label}
+                        value={field.value}
+                        onChange={e => field.handleChangeSensor(e.target.value)}
+                        sx={{
+                          '& .MuiOutlinedInput-notchedOutline': {
+                            borderColor: 'rgba(255, 255, 255, 0.63)',
+                          },
+                          '& .MuiInputLabel-root': {
+                            color: 'rgba(255, 255, 255, 0.63)',
+                          },
+                          margin: '12px'
+                        }}
+                      />
                     ))}
                   </Grid>
                 </Grid>
               ) :
                 <Grid lg={12} xs={12} className={styles.leftContainer}>
                   <Grid display={'flex'} justifyContent={'center'} container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 4 }} padding={12}>
-                    {locationValues.map((item, i) => (
+                    {resumenFields.map((index, i) => (
                       <Grid item key={i}>
-                        <TextField name={item.name} label={item.label} variant="outlined" sx={{
+                        <TextField label={index.label} value={index.value} variant="outlined" sx={{
                           '& .MuiOutlinedInput-notchedOutline': {
                             borderColor: 'rgba(255, 255, 255, 0.63)',
                           },
