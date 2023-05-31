@@ -42,21 +42,34 @@ const SuscribirEstacion = () => {
     setIsLoading(true);
     suscribirEstacion();
     console.log('ESTACION', ingresoEstacion);
+    setIngresoEstacion({
+      description: {
+        metadata: {},
+        value: '',
+      },
+      location: {
+        coordinates: [],
+        metadata: {},
+      },
+      user: {
+        value: 'user_15'
+      }
+    })
 
     setTimeout(() => {
       setIsLoading(false);
-      /* setIngresoOk(true); */
-      setErrorIngreso(true);
+      setIngresoOk(true);
+      /* setErrorIngreso(true); */
     }, 5000);
   };
 
   useEffect(() => {
-    if (ingresoEstacion.description.value == '' || ingresoEstacion.location.coordinates.length == 0) {
+    if ((ingresoEstacion.description.value == '' || ingresoEstacion.location.coordinates.length == 0) && !ingresoOk) {
       setIsButtonDisable(true)
     } else {
       setIsButtonDisable(false)
     }
-  }, [ingresoEstacion.description.value, ingresoEstacion.location.coordinates])
+  }, [ingresoEstacion.description.value, ingresoEstacion.location.coordinates, ingresoOk])
 
   const handleChange = (fieldName: any, value: any) => {
     setIngresoEstacion(prevState => ({
