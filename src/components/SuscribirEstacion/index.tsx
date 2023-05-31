@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Grid, TextField, Button, Typography, Box, Stepper, Step, StepLabel } from '@mui/material'
+import { Grid, TextField, Button, Typography, Box, Stepper, Step, StepLabel, Tooltip } from '@mui/material'
+import { LoadingButton } from '@mui/lab'
+import SaveIcon from '@mui/icons-material/Save';
 import styles from './styles.module.css';
 import { getEstacion, getEstaciones, postEstacion } from "@/services";
 import { IngresoEstacionValues } from "@/utils/interfaces";
+import { CheckCircle } from "@mui/icons-material";
 
 const SuscribirEstacion = () => {
-
   /* acá se guarda la estación y sensor */
-
   /* obligatorio coordenadas y descripción */
-
-
   const [ingresoSensor, setIngresoSensor] = useState({
     description: {
       value: '',
@@ -21,7 +20,6 @@ const SuscribirEstacion = () => {
       metadata: '',
     }
   })
-
   const [ingresoEstacion, setIngresoEstacion] = useState<IngresoEstacionValues>({
     description: {
       metadata: {},
@@ -35,6 +33,28 @@ const SuscribirEstacion = () => {
       value: 'user_15'
     }
   })
+  const [isButtonDisable, setIsButtonDisable] = useState(true);
+  const [ingresoOk, setIngresoOk] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleClickLoading = () => {
+    setIsLoading(true);
+    suscribirEstacion();
+    console.log('ESTACION', ingresoEstacion);
+
+    setTimeout(() => {
+      setIsLoading(false);
+      setIngresoOk(true)
+    }, 5000);
+  };
+
+  useEffect(() => {
+    if (ingresoEstacion.description.value == '' || ingresoEstacion.location.coordinates.length == 0) {
+      setIsButtonDisable(true)
+    } else {
+      setIsButtonDisable(false)
+    }
+  }, [ingresoEstacion.description.value, ingresoEstacion.location.coordinates])
 
   const handleChange = (fieldName: any, value: any) => {
     setIngresoEstacion(prevState => ({
@@ -50,14 +70,7 @@ const SuscribirEstacion = () => {
     }));
   };
 
-  const handleGuardar = () => {
-    console.log('ESTACION', ingresoEstacion);
-    console.log('SENSOR', ingresoSensor)
-    suscribirEstacion();
-  };
-
   /* llamado a las apis */
-
   const suscribirEstacion = async () => {
     try {
       const resultado = await postEstacion(ingresoEstacion);
@@ -68,7 +81,6 @@ const SuscribirEstacion = () => {
   };
 
   /* acá empieza el step */
-
   const steps = ['Estación', 'Sensor', 'Resumen'];
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set<number>());
@@ -117,16 +129,24 @@ const SuscribirEstacion = () => {
 
   const ingresoEstacionFields = [
     {
-      label: 'Description',
+      label: 'Descripción',
       stateKey: 'description',
       value: ingresoEstacion.description.value,
       handleChange: (value: any) => handleChange('description', { value, metadata: {} }),
+      tooltip: {
+        value: 'Ingrese la descripción deseada',
+      },
+      type: 'text'
     },
     {
-      label: 'Coordinates',
+      label: 'Coordenadas',
       stateKey: 'location',
       value: ingresoEstacion.location.coordinates.join(', '),
       handleChange: (value: any) => handleChange('location', { coordinates: value.split(', '), metadata: {} }),
+      tooltip: {
+        value: 'Ingrese latitud y longitud separados por una coma. (Ej: -50.250, 25.110)',
+      },
+      type: 'text'
     },
   ];
 
@@ -176,7 +196,6 @@ const SuscribirEstacion = () => {
     },
   ]
 
-
   return (
     <>
       <Box paddingTop={5}>
@@ -225,31 +244,56 @@ const SuscribirEstacion = () => {
           ) : (
             <React.Fragment>
               {activeStep === 0 ? (
-                <Grid lg={12} xs={12}>
-                  <Grid display={'flex'} justifyContent={'center'} container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 4 }} padding={12} >
+                <Grid lg={12} xs={12} className={styles.inputsContainer}>
+                  <Typography textAlign={'center'} variant="h4" paddingTop={4} color={'white'}>Ingrese su estación</Typography>
+                  <Grid display={'flex'} justifyContent={'center'} container rowSpacing={2} paddingTop={6} >
                     {ingresoEstacionFields.map((field, index) => (
-                      <TextField
-                        key={index}
-                        type="text"
-                        label={field.label}
-                        value={field.value}
-                        onChange={e => field.handleChange(e.target.value)}
-                        sx={{
-                          '& .MuiOutlinedInput-notchedOutline': {
-                            borderColor: 'rgba(255, 255, 255, 0.63)',
-                          },
-                          '& .MuiInputLabel-root': {
-                            color: 'rgba(255, 255, 255, 0.63)',
-                          },
-                          margin: '12px'
-                        }}
-                      />
+                      <Tooltip key={index} title={field.tooltip.value} placement={'top'}>
+                        <TextField
+                          key={index}
+                          type={field.type}
+                          label={field.label}
+                          value={field.value}
+                          onChange={e => field.handleChange(e.target.value)}
+                          sx={{
+                            '& .MuiOutlinedInput-notchedOutline': {
+                              borderColor: 'rgba(255, 255, 255, 0.63)',
+                            },
+                            '& .MuiInputLabel-root': {
+                              color: 'rgba(255, 255, 255, 0.63)',
+                            },
+                            '& .MuiOutlinedInput-input': {
+                              color: 'rgba(255, 255, 255, 0.63)',
+                            },
+                            margin: '12px'
+                          }}
+                        />
+                      </Tooltip>
                     ))}
+                  </Grid>
+                  <Grid padding={1}>
+                    <LoadingButton
+                      loading={isLoading}
+                      startIcon={ingresoOk ? '' : <SaveIcon />}
+                      endIcon={ingresoOk ? <CheckCircle /> : ''}
+                      color={ingresoOk ? 'success' : 'primary'}
+                      disabled={isButtonDisable}
+                      variant="outlined"
+                      size="large"
+                      sx={{
+                        '& .MuiLoadingButton-loadingIndicator': {
+                          color: '#1976d2',
+                        },
+                      }}
+                      onClick={handleClickLoading}
+                    >
+                      {ingresoOk ? 'Guardado correctamente' : 'Ingresar'}
+                    </LoadingButton>
                   </Grid>
                 </Grid>
               ) : (activeStep === 1 ? (
                 <Grid lg={12} xs={12}>
-                  <Grid display={'flex'} justifyContent={'center'} container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 4 }} padding={12}>
+                  <Grid display={'flex'} justifyContent={'center'} container rowSpacing={2} padding={12}>
                     {ingresoSensorFields.map((field, index) => (
                       <TextField
                         key={index}
@@ -271,7 +315,7 @@ const SuscribirEstacion = () => {
                   </Grid>
                 </Grid>
               ) :
-                <Grid lg={12} xs={12} className={styles.leftContainer}>
+                <Grid lg={12} xs={12} className={styles.inputsContainer}>
                   <Grid display={'flex'} justifyContent={'center'} container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 4 }} padding={12}>
                     {resumenFields.map((index, i) => (
                       <Grid item key={i}>
@@ -286,15 +330,12 @@ const SuscribirEstacion = () => {
                       </Grid>
                     ))}
                   </Grid>
-                  <Grid padding={1}>
-                    <Button variant="contained" className={styles.btnRegistrar} color="success" size="large" onClick={handleGuardar}>Registrar</Button>
-                  </Grid>
                 </Grid>
               )
               }
               <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
                 <Button
-                  color="inherit"
+                  color="primary"
                   disabled={activeStep === 0}
                   onClick={handleBack}
                   sx={{ mr: 1 }}
@@ -316,37 +357,6 @@ const SuscribirEstacion = () => {
         </Grid>
       </Box>
     </>
-    /*  <>
-       <Grid lg={12} xs={12} className={styles.leftContainer}>
-         <Typography marginTop={4} marginBottom={2} color={'white'}>Contacto</Typography>
-         <Grid display={'flex'} justifyContent={'center'} container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 2 }} padding={2}>
-           {contactValues.map((item, i) => (
-             <Grid item key={i}>
-               <TextField name={item.name} label={item.label} variant="outlined" onChange={handleChange} sx={{ backgroundColor: 'white' }} />
-             </Grid>
-           ))}
-         </Grid>
-         <Typography marginTop={5} marginBottom={2} color={'white'}>Estación</Typography>
-         <Grid display={'flex'} justifyContent={'center'} container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 2 }} padding={2}>
-           {stationValues.map((item, i) => (
-             <Grid item key={i}>
-               <TextField name={item.name} label={item.label} variant="outlined" onChange={handleChange} sx={{ backgroundColor: 'white' }} />
-             </Grid>
-           ))}
-         </Grid>
-         <Typography marginTop={5} marginBottom={2} color={'white'}>Ubicación</Typography>
-         <Grid display={'flex'} justifyContent={'center'} container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 2 }} padding={1}>
-           {locationValues.map((item, i) => (
-             <Grid item key={i}>
-               <TextField name={item.name} label={item.label} variant="outlined" onChange={handleChange} sx={{ backgroundColor: 'white' }} />
-             </Grid>
-           ))}
-         </Grid>
-         <Grid padding={1}>
-           <Button variant="contained" className={styles.btnRegistrar} color="success" size="large" onClick={handleGuardar}>Registrar</Button>
-         </Grid>
-       </Grid>
-     </> */
   )
 }
 
