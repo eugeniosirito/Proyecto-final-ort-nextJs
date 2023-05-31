@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Grid, TextField, Button, Typography, Box, Stepper, Step, StepLabel, Tooltip } from '@mui/material'
+import { Grid, TextField, Button, Typography, Box, Stepper, Step, StepLabel, Tooltip, CircularProgress } from '@mui/material'
 import { LoadingButton } from '@mui/lab'
 import SaveIcon from '@mui/icons-material/Save';
 import styles from './styles.module.css';
 import { getEstacion, getEstaciones, postEstacion } from "@/services";
 import { IngresoEstacionValues } from "@/utils/interfaces";
-import { CheckCircle } from "@mui/icons-material";
+import { CheckCircle, ErrorOutline } from "@mui/icons-material";
 
 const SuscribirEstacion = () => {
   /* acá se guarda la estación y sensor */
@@ -35,6 +35,7 @@ const SuscribirEstacion = () => {
   })
   const [isButtonDisable, setIsButtonDisable] = useState(true);
   const [ingresoOk, setIngresoOk] = useState(false);
+  const [errorIngreso, setErrorIngreso] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleClickLoading = () => {
@@ -44,7 +45,8 @@ const SuscribirEstacion = () => {
 
     setTimeout(() => {
       setIsLoading(false);
-      setIngresoOk(true)
+      /* setIngresoOk(true); */
+      setErrorIngreso(true);
     }, 5000);
   };
 
@@ -274,20 +276,17 @@ const SuscribirEstacion = () => {
                   <Grid padding={1}>
                     <LoadingButton
                       loading={isLoading}
-                      startIcon={ingresoOk ? '' : <SaveIcon />}
-                      endIcon={ingresoOk ? <CheckCircle /> : ''}
-                      color={ingresoOk ? 'success' : 'primary'}
+                      loadingIndicator={<CircularProgress color="primary" size={32} />}
+                      startIcon={ingresoOk ? '' : errorIngreso ? '' : <SaveIcon />}
+                      endIcon={ingresoOk ? <CheckCircle /> : errorIngreso ? <ErrorOutline /> : ''}
+                      color={ingresoOk ? 'success' : errorIngreso ? 'error' : 'primary'}
                       disabled={isButtonDisable}
-                      variant="outlined"
+                      variant="contained"
                       size="large"
-                      sx={{
-                        '& .MuiLoadingButton-loadingIndicator': {
-                          color: '#1976d2',
-                        },
-                      }}
+                      className={ingresoOk ? styles.loadingButtonSuccess : errorIngreso ? styles.loadingButtonError : styles.loadingButtonStatic}
                       onClick={handleClickLoading}
                     >
-                      {ingresoOk ? 'Guardado correctamente' : 'Ingresar'}
+                      {ingresoOk ? 'Guardado correctamente' : errorIngreso ? 'Error al ingresar' : 'Ingresar'}
                     </LoadingButton>
                   </Grid>
                 </Grid>
