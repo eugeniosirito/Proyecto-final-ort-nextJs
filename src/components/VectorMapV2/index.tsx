@@ -1,20 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { VectorMap } from "@react-jvectormap/core";
 import { worldMill } from "@react-jvectormap/world";
 import { arMill } from "@react-jvectormap/argentina";
 import { southAmericaMill } from "@react-jvectormap/southamerica";
+import { IngresoEstacionValues } from "@/utils/interfaces";
+import { getEstaciones } from "@/services";
 
 const VectorMapV2 = () => {
-  const mapData = {
-    US: 100, // Puedes ajustar el valor según tus necesidades
-    // Otros códigos de país y sus valores correspondientes
-  };
-
-  const mapOptions = {
-    // Configura las opciones del mapa según tus necesidades
-    backgroundColor: "#ffffff",
-    // ...
-  };
 
   return (
     <VectorMap
@@ -34,7 +26,7 @@ const VectorMapV2 = () => {
       markers={[
         // posición y nombre del marcador en el mapa
         {
-          latLng: [-34.510986, -58.497743], // Aquí puedes colocar las coordenadas de latitud y longitud de tu punto
+          latLng: [-37.597205, -65.678607], // Aquí puedes colocar las coordenadas de latitud y longitud de tu punto
           name: "Punto1, Estación de humedad",
         },
         {

@@ -21,6 +21,7 @@ const SuscribirEstacion = () => {
     }
   })
   const [ingresoEstacion, setIngresoEstacion] = useState<IngresoEstacionValues>({
+    id: '',
     description: {
       metadata: {},
       value: '',
@@ -33,6 +34,7 @@ const SuscribirEstacion = () => {
       value: 'user_15'
     }
   })
+  const [estaciones, setEstaciones] = useState({});
   const [isButtonDisable, setIsButtonDisable] = useState(true);
   const [ingresoOk, setIngresoOk] = useState(false);
   const [errorIngreso, setErrorIngreso] = useState(false);
@@ -43,6 +45,7 @@ const SuscribirEstacion = () => {
     suscribirEstacion();
     console.log('ESTACION', ingresoEstacion);
     setIngresoEstacion({
+      id: '',
       description: {
         metadata: {},
         value: '',
@@ -60,16 +63,48 @@ const SuscribirEstacion = () => {
       setIsLoading(false);
       setIngresoOk(true);
       /* setErrorIngreso(true); */
+      getEstaciones()
+        .then(response => {
+          setEstaciones(response)
+          console.log(response)
+        })
+        .catch(error => {
+          console.log(error)
+        });
+      console.log(estaciones);
     }, 5000);
+
   };
 
+  /* llamado a las apis */
+  const suscribirEstacion = async () => {
+    try {
+      const resultado = await postEstacion(ingresoEstacion);
+      console.log(resultado, "post correcto");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  /* llama al get estaciones apenas se renderiza la pantalla */
+  /* useEffect(() => {
+   getEstaciones()
+     .then(response => {
+       setEstaciones(response)
+       console.log(response)
+     })
+     .catch(error => {
+       console.log(error)
+     });
+ }, []) */
+
   useEffect(() => {
-    if ((ingresoEstacion.description.value == '' || ingresoEstacion.location.coordinates.length == 0) && !ingresoOk) {
+    if ((ingresoEstacion.description.value == '' || ingresoEstacion.location.coordinates.length == 0) && (!ingresoOk && !errorIngreso)) {
       setIsButtonDisable(true)
     } else {
       setIsButtonDisable(false)
     }
-  }, [ingresoEstacion.description.value, ingresoEstacion.location.coordinates, ingresoOk])
+  }, [errorIngreso, ingresoEstacion.description.value, ingresoEstacion.location.coordinates, ingresoOk])
 
   const handleChange = (fieldName: any, value: any) => {
     setIngresoEstacion(prevState => ({
@@ -83,16 +118,6 @@ const SuscribirEstacion = () => {
       ...prevState,
       [fieldName]: value,
     }));
-  };
-
-  /* llamado a las apis */
-  const suscribirEstacion = async () => {
-    try {
-      const resultado = await postEstacion(ingresoEstacion);
-      console.log(resultado, "post correcto");
-    } catch (error) {
-      console.error(error);
-    }
   };
 
   /* acá empieza el step */

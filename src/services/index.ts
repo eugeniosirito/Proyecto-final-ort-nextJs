@@ -10,7 +10,9 @@ export const getEstaciones = async () => {
 };
 
 export const getEstacion = async (id: string) => {
-  const { data } = await axios.get(`http://localhost:3000/estaciones/${id}`);
+  const { data } = await axios.get(
+    `https://646faee909ff19b12087a570.mockapi.io/postEstacion/${id}`
+  );
   return data;
 };
 

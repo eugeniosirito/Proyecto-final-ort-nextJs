@@ -5,9 +5,9 @@ import LineChart from '../Charts/LineChart';
 import styles from './styles.module.css';
 import VectorMapV2 from '../VectorMapV2';
 import { getEstaciones } from '@/services';
+import { IngresoEstacionValues } from '@/utils/interfaces';
 
 const DashCards = () => {
-
   const testCards = [
     {
       title: 'Visitors',
@@ -39,36 +39,28 @@ const DashCards = () => {
     },
   ]
 
+  const [estaciones, setEstaciones] = useState<IngresoEstacionValues[]>([]);
+
+  /* llama al get estaciones apenas se renderiza la pantalla */
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await getEstaciones();
-        setEstaciones(data);
-        console.log(data);
-      } catch (error) {
-        console.error("ERROR", error);
-      }
-    };
-    fetchData();
+    getEstaciones()
+      .then(response => {
+        setEstaciones(response);
+        console.log('estaciones response', estaciones);
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }, []);
 
-  const [age, setAge] = useState('');
-  const [estaciones, setEstaciones] = useState([{
-    id: '',
-    name: '',
-    lastName: '',
-    model: '',
-    description: '',
-    sensors: 0,
-    dataPublication: '',
-    longitude: 0,
-    latitude: 0,
-    desc: '',
-  }]);
-
+  const [id, setId] = useState('');
   const handleChange = (event: SelectChangeEvent) => {
-    setAge(event.target.value);
+    setId(event.target.value);
+    console.log('estaciones response', estaciones);
+    console.log('COORDENADAS', coordenadasNumber);
   };
+
+  const coordenadasNumber = estaciones[6]?.location.coordinates.map(str => parseFloat(str));
 
   return (
     <>
@@ -76,9 +68,9 @@ const DashCards = () => {
         <Typography textAlign={'center'} paddingLeft={2} paddingY={2} paddingBottom={0} color={'white'} variant='h5'>Selecciona tu estación</Typography>
         <Grid lg={12} paddingLeft={2} paddingY={2} >
           <Select fullWidth sx={{ backgroundColor: 'rgb(35, 48, 68)', color: 'white' }}
-            value={age}
+            value={id}
             onChange={handleChange}
-            label="Age"
+            label="id"
           >
             {estaciones.map((item, i) => (
               <MenuItem value={item.id} key={i}>{item.id}</MenuItem>

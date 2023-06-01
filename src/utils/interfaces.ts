@@ -1,4 +1,5 @@
 export interface IngresoEstacionValues {
+  id: string;
   description: {
     value: string;
     metadata: object;
