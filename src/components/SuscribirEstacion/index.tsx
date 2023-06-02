@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Grid, TextField, Button, Typography, Box, Stepper, Step, StepLabel, Tooltip, CircularProgress } from '@mui/material'
-import { LoadingButton } from '@mui/lab'
-import SaveIcon from '@mui/icons-material/Save';
+import { Grid, TextField, Button, Typography, Box, Stepper, Step, StepLabel, Tooltip } from '@mui/material'
 import styles from './styles.module.css';
-import { getEstacion, getEstaciones, postEstacion } from "@/services";
+import { postEstacion } from "@/services";
 import { IngresoEstacionValues } from "@/utils/interfaces";
-import { CheckCircle, ErrorOutline } from "@mui/icons-material";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'
 
 const SuscribirEstacion = () => {
-  /* acá se guarda la estación y sensor */
-  /* obligatorio coordenadas y descripción */
   const [ingresoSensor, setIngresoSensor] = useState({
     description: {
       value: '',
@@ -34,77 +31,15 @@ const SuscribirEstacion = () => {
       value: 'user_15'
     }
   })
-  const [estaciones, setEstaciones] = useState({});
   const [isButtonDisable, setIsButtonDisable] = useState(true);
-  const [ingresoOk, setIngresoOk] = useState(false);
-  const [errorIngreso, setErrorIngreso] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleClickLoading = () => {
-    setIsLoading(true);
-    suscribirEstacion();
-    console.log('ESTACION', ingresoEstacion);
-    setIngresoEstacion({
-      id: '',
-      description: {
-        metadata: {},
-        value: '',
-      },
-      location: {
-        coordinates: [],
-        metadata: {},
-      },
-      user: {
-        value: 'user_15'
-      }
-    })
-
-    setTimeout(() => {
-      setIsLoading(false);
-      setIngresoOk(true);
-      /* setErrorIngreso(true); */
-      getEstaciones()
-        .then(response => {
-          setEstaciones(response)
-          console.log(response)
-        })
-        .catch(error => {
-          console.log(error)
-        });
-      console.log(estaciones);
-    }, 5000);
-
-  };
-
-  /* llamado a las apis */
-  const suscribirEstacion = async () => {
-    try {
-      const resultado = await postEstacion(ingresoEstacion);
-      console.log(resultado, "post correcto");
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  /* llama al get estaciones apenas se renderiza la pantalla */
-  /* useEffect(() => {
-   getEstaciones()
-     .then(response => {
-       setEstaciones(response)
-       console.log(response)
-     })
-     .catch(error => {
-       console.log(error)
-     });
- }, []) */
 
   useEffect(() => {
-    if ((ingresoEstacion.description.value == '' || ingresoEstacion.location.coordinates.length == 0) && (!ingresoOk && !errorIngreso)) {
+    if ((ingresoEstacion.description.value == '' || ingresoEstacion.location.coordinates.length == 0)) {
       setIsButtonDisable(true)
     } else {
       setIsButtonDisable(false)
     }
-  }, [errorIngreso, ingresoEstacion.description.value, ingresoEstacion.location.coordinates, ingresoOk])
+  }, [ingresoEstacion.description.value, ingresoEstacion.location.coordinates])
 
   const handleChange = (fieldName: any, value: any) => {
     setIngresoEstacion(prevState => ({
@@ -236,6 +171,44 @@ const SuscribirEstacion = () => {
     },
   ]
 
+  const notify = () => {
+    const returnPostPromise = () => {
+      return new Promise(async (resolve, reject) => {
+        try {
+          const resultado = await postEstacion(ingresoEstacion);
+          setIngresoEstacion({
+            id: '',
+            description: {
+              metadata: {},
+              value: '',
+            },
+            location: {
+              coordinates: [],
+              metadata: {},
+            },
+            user: {
+              value: 'user_15'
+            }
+          })
+          resolve(resultado)
+          console.log(resultado, "post correcto");
+        } catch (error) {
+          console.error(error);
+          reject(error)
+        }
+      })
+    }
+
+    toast.promise(
+      returnPostPromise,
+      {
+        pending: 'Inscribiendo estación',
+        success: 'Inscripta correctamente 👌',
+        error: 'Ha occurido un error, vuelva a intentar mas tarde 🤯'
+      }
+    )
+  };
+
   return (
     <>
       <Box paddingTop={5}>
@@ -312,20 +285,9 @@ const SuscribirEstacion = () => {
                     ))}
                   </Grid>
                   <Grid paddingTop={3}>
-                    <LoadingButton
-                      loading={isLoading}
-                      loadingIndicator={<CircularProgress color="primary" size={32} />}
-                      startIcon={ingresoOk ? '' : errorIngreso ? '' : <SaveIcon />}
-                      endIcon={ingresoOk ? <CheckCircle /> : errorIngreso ? <ErrorOutline /> : ''}
-                      color={ingresoOk ? 'success' : errorIngreso ? 'error' : 'primary'}
-                      disabled={isButtonDisable}
-                      variant="contained"
-                      size="large"
-                      className={ingresoOk ? styles.loadingButtonSuccess : errorIngreso ? styles.loadingButtonError : styles.loadingButtonStatic}
-                      onClick={handleClickLoading}
-                    >
-                      {ingresoOk ? 'Guardado correctamente' : errorIngreso ? 'Error al ingresar' : 'Ingresar'}
-                    </LoadingButton>
+                    <Button size="large" onClick={notify} disabled={isButtonDisable} variant="contained" className={styles.loadingButtonStatic}>
+                      Ingresar estación
+                    </Button>
                   </Grid>
                 </Grid>
               ) : (activeStep === 1 ? (
