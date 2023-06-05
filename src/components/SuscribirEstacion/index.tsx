@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Grid, TextField, Button, Typography, Box, Stepper, Step, StepLabel, Tooltip, Zoom, Accordion, AccordionSummary, AccordionDetails } from '@mui/material'
+import { Grid, TextField, Button, Typography, Box, Stepper, Step, StepLabel, Tooltip, Zoom, Accordion, AccordionSummary, AccordionDetails, Chip } from '@mui/material'
 import { ExpandMore } from '@mui/icons-material'
 import styles from './styles.module.css';
 import { postEstacion } from "@/services";
@@ -228,7 +228,14 @@ const SuscribirEstacion = () => {
   return (
     <>
       <Box paddingTop={5}>
-        <Grid display={'flex'} flexDirection={'column'} padding={5} sx={{ backgroundColor: 'rgb(35, 48, 68)', margin: '0 auto' }} lg={10}>
+        <Grid display={'flex'} flexDirection={'column'} padding={5}
+          sx={{
+            backgroundColor: 'rgb(35, 48, 68)',
+            margin: '0 auto',
+            borderRadius: '12px',
+            boxShadow: '2px 3px 6px 0px #000'
+          }}
+          lg={10}>
           <Stepper activeStep={activeStep}>
             {steps.map((label, index) => {
               const stepProps: { completed?: boolean } = {};
@@ -344,7 +351,16 @@ const SuscribirEstacion = () => {
                         aria-controls="panel1a-content"
                         id="panel1a-header"
                       >
-                        <Typography color={'rgba(255, 255, 255, 0.63)'}>Estación N°15</Typography>
+                        <Grid container justifyContent={"space-between"}>
+                          <Grid item display={'flex'} alignItems={'center'}>
+                            <Typography color={'rgba(255, 255, 255, 0.63)'}>Estación N°15</Typography>
+                          </Grid>
+                          <Tooltip title={'Un administrador estara revisando y aprobando esta estación.'} placement="top" arrow TransitionComponent={Zoom}>
+                            <Grid item paddingRight={1}>
+                              <Chip label="En aprobación" sx={{ backgroundColor: '#D1C500' }} />
+                            </Grid>
+                          </Tooltip>
+                        </Grid>
                       </AccordionSummary>
                       <AccordionDetails>
                         <Grid display={'flex'} justifyContent={'center'} container>
@@ -367,19 +383,16 @@ const SuscribirEstacion = () => {
                         </Grid>
                       </AccordionDetails>
                     </Accordion>
+                    <Grid paddingTop={3}>
+                      <Button size="large" variant="contained" className={styles.loadingButtonStatic}>
+                        Ir al resumen
+                      </Button>
+                    </Grid>
                   </Grid>
                 </Grid>
               )
               }
               <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                <Button
-                  color="primary"
-                  disabled={activeStep === 0}
-                  onClick={handleBack}
-                  sx={{ mr: 1 }}
-                >
-                  Back
-                </Button>
                 <Box sx={{ flex: '1 1 auto' }} />
                 {isStepOptional(activeStep) && (
                   <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>

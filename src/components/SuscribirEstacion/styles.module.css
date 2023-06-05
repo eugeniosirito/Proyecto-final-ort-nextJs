@@ -13,6 +13,16 @@
   color: white;
 }
 
-.inputColor input {
-  color: white;
+.loadingButtonStatic {
+  background-color: #1976d2;
+}
+
+.loadingButtonSuccess {
+  transition: ease-in-out 0.7s;
+  background-color: #1b5e20;
+}
+
+.loadingButtonError {
+  transition: ease-in-out 0.7s;
+  background-color: #d32f2f;
 }

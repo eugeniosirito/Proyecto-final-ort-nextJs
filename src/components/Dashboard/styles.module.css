@@ -1,5 +1,6 @@
 .cardsBgc {
   background-color: rgb(35, 48, 68);
+  box-shadow: 2px 3px 6px 0px #000;
 }
 
 .percentageNegative {
@@ -16,4 +17,8 @@
   border-radius: 4px;
   font-size: 14px;
   padding: 2.5px;
+}
+
+.boxShadowCss {
+  box-shadow: 2px 3px 6px 0px #000;
 }

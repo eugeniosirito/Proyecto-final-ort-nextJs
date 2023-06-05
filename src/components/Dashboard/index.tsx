@@ -66,8 +66,8 @@ const DashCards = () => {
     <>
       <Grid container display={'flex'} flexDirection={'column'} lg={12}>
         <Typography textAlign={'center'} paddingLeft={2} paddingY={2} paddingBottom={0} color={'white'} variant='h5'>Selecciona tu estación</Typography>
-        <Grid lg={12} paddingLeft={2} paddingY={2} >
-          <Select fullWidth sx={{ backgroundColor: 'rgb(35, 48, 68)', color: 'white' }}
+        <Grid lg={12} paddingLeft={2} paddingY={2}>
+          <Select fullWidth className={styles.boxShadowCss} sx={{ backgroundColor: 'rgb(35, 48, 68)', color: 'white' }}
             value={id}
             onChange={handleChange}
             label="id"
@@ -81,7 +81,7 @@ const DashCards = () => {
         <Grid container display={'flex'} flexDirection={'row'} lg={12}>
           <Grid container lg={4} rowSpacing={{ lg: 1, sm: 2, xs: 2 }} columnSpacing={{ lg: 1, md: 2 }} paddingLeft={2} paddingY={2}>
             {testCards.map((card, index) => (
-              <Grid key={index} item lg={6} md={6} sm={12} xs={12}>
+              <Grid key={index} item lg={6} md={6} sm={12} xs={12} className={styles.boxShadowCss}>
                 <Card sx={{ backgroundColor: 'rgb(35, 48, 68)' }}>
                   <CardContent sx={{ paddingBottom: '8px !important' }}>
                     <Typography variant='h6' color={'white'}>{card.title}</Typography>
@@ -94,7 +94,7 @@ const DashCards = () => {
               </Grid>
             ))}
           </Grid>
-          <Grid container lg={8} paddingLeft={2} paddingY={2} className={styles.cacaca}>
+          <Grid container lg={8} paddingLeft={2} paddingY={2}>
             <Grid item lg={12} md={12} className={styles.cardsBgc}>
               <LineChart />
             </Grid>
@@ -103,12 +103,12 @@ const DashCards = () => {
       </Grid>
       <Grid container lg={12}>
         <Grid container lg={7} paddingLeft={2} paddingY={2} paddingRight={3}>
-          <Grid item lg={12} md={12} style={{ height: '300px' }}>
+          <Grid item lg={12} md={12} style={{ height: '300px' }} className={styles.boxShadowCss}>
             <VectorMapV2 />
           </Grid>
         </Grid>
         <Grid container lg={5} rowSpacing={{ lg: 1, sm: 2, xs: 2 }} columnSpacing={{ lg: 1, md: 2 }} paddingLeft={2} paddingY={2}
-          style={{ marginTop: '16px', height: '300px', backgroundColor: "rgb(35, 48, 68)" }}>
+          style={{ marginTop: '16px', height: '300px', backgroundColor: "rgb(35, 48, 68)" }} className={styles.boxShadowCss}>
           <DoughnutChart />
         </Grid>
       </Grid>
