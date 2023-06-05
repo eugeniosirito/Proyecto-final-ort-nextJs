@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Grid, TextField, Button, Typography, Box, Stepper, Step, StepLabel, Tooltip } from '@mui/material'
+import { Grid, TextField, Button, Typography, Box, Stepper, Step, StepLabel, Tooltip, Zoom } from '@mui/material'
 import styles from './styles.module.css';
 import { postEstacion } from "@/services";
 import { IngresoEstacionValues } from "@/utils/interfaces";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
+import { putEstacion } from "@/services";
 
 const SuscribirEstacion = () => {
   const [ingresoSensor, setIngresoSensor] = useState({
@@ -32,6 +33,7 @@ const SuscribirEstacion = () => {
     }
   })
   const [isButtonDisable, setIsButtonDisable] = useState(true);
+  const [ingresoOk, setIngresoOk] = useState(false);
 
   useEffect(() => {
     if ((ingresoEstacion.description.value == '' || ingresoEstacion.location.coordinates.length == 0)) {
@@ -119,7 +121,7 @@ const SuscribirEstacion = () => {
       value: ingresoEstacion.location.coordinates.join(', '),
       handleChange: (value: any) => handleChange('location', { coordinates: value.split(', '), metadata: {} }),
       tooltip: {
-        value: 'Ingrese latitud y longitud separados por una coma. (Ej: -50.250, 25.110)',
+        value: 'Ingrese latitud y longitud de su estación separados por una coma. (Ej: -50.250, 25.110).',
       },
       type: 'text'
     },
@@ -174,27 +176,40 @@ const SuscribirEstacion = () => {
   const notify = () => {
     const returnPostPromise = () => {
       return new Promise(async (resolve, reject) => {
-        try {
-          const resultado = await postEstacion(ingresoEstacion);
-          setIngresoEstacion({
-            id: '',
-            description: {
-              metadata: {},
-              value: '',
-            },
-            location: {
-              coordinates: [],
-              metadata: {},
-            },
-            user: {
-              value: 'user_15'
-            }
-          })
-          resolve(resultado)
-          console.log(resultado, "post correcto");
-        } catch (error) {
-          console.error(error);
-          reject(error)
+        if (activeStep === 0) {
+          try {
+            const resultado = await postEstacion(ingresoEstacion);
+            setIngresoEstacion({
+              id: '',
+              description: {
+                metadata: {},
+                value: '',
+              },
+              location: {
+                coordinates: [],
+                metadata: {},
+              },
+              user: {
+                value: 'user_15'
+              }
+            });
+            setIngresoOk(true);
+            resolve(resultado)
+            console.log(resultado, "post correcto");
+          } catch (error) {
+            console.error(error);
+            reject(error)
+          }
+        } else {
+          try {
+            const resultado = await putEstacion(ingresoSensor.station_id.value, ingresoSensor);
+            setIngresoOk(true);
+            resolve(resultado)
+            console.log(resultado, "put correcto");
+          } catch (error) {
+            console.error(error);
+            reject(error)
+          }
         }
       })
     }
@@ -261,7 +276,7 @@ const SuscribirEstacion = () => {
                   <Typography textAlign={'center'} variant="h4" paddingTop={4} color={'white'}>Ingrese su estación</Typography>
                   <Grid display={'flex'} justifyContent={'center'} container rowSpacing={2} paddingTop={6} >
                     {ingresoEstacionFields.map((field, index) => (
-                      <Tooltip key={index} title={field.tooltip.value} placement={'top'}>
+                      <Tooltip key={index} title={field.tooltip.value} placement={'top'} arrow TransitionComponent={Zoom}>
                         <TextField
                           key={index}
                           type={field.type}
@@ -291,8 +306,9 @@ const SuscribirEstacion = () => {
                   </Grid>
                 </Grid>
               ) : (activeStep === 1 ? (
-                <Grid lg={12} xs={12}>
-                  <Grid display={'flex'} justifyContent={'center'} container rowSpacing={2} padding={12}>
+                <Grid lg={12} xs={12} className={styles.inputsContainer}>
+                  <Typography textAlign={'center'} variant="h4" paddingTop={4} color={'white'}>Ingrese un sensor (Opcional)</Typography>
+                  <Grid display={'flex'} justifyContent={'center'} container rowSpacing={2} paddingTop={6}>
                     {ingresoSensorFields.map((field, index) => (
                       <TextField
                         key={index}
@@ -311,6 +327,11 @@ const SuscribirEstacion = () => {
                         }}
                       />
                     ))}
+                  </Grid>
+                  <Grid paddingTop={3}>
+                    <Button size="large" onClick={notify} /* disabled={isButtonDisable} */ variant="contained" className={styles.loadingButtonStatic}>
+                      Ingresar estación
+                    </Button>
                   </Grid>
                 </Grid>
               ) :
@@ -347,9 +368,18 @@ const SuscribirEstacion = () => {
                     Skip
                   </Button>
                 )}
-                <Button onClick={handleNext}>
-                  {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                </Button>
+                {ingresoOk ? (
+                  <Tooltip title={activeStep === 0 ? 'Estación ingresada, clickea aquí para continuar.' : 'Sensor ingresado correctamente, haz click aquí para ver el resúmen.'} placement="top" arrow TransitionComponent={Zoom} open={true}>
+                    <Button
+                      onClick={() => {
+                        handleNext();
+                        setIngresoOk(false);
+                      }}
+                    >
+                      {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                    </Button>
+                  </Tooltip>
+                ) : null}
               </Box>
             </React.Fragment>
           )}

@@ -28,7 +28,7 @@ export const postEstacion = async (estacion: any) => {
 
 export const putEstacion = async (id: string, estacion: any) => {
   const { data } = await axios.put(
-    `http://localhost:3000/estaciones/${id}`,
+    `https://646faee909ff19b12087a570.mockapi.io/postEstacion/${id}`,
     estacion
   );
   return data;
