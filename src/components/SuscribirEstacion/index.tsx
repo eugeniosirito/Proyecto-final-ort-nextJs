@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Grid, TextField, Button, Typography, Box, Stepper, Step, StepLabel, Tooltip, Zoom } from '@mui/material'
+import { Grid, TextField, Button, Typography, Box, Stepper, Step, StepLabel, Tooltip, Zoom, Accordion, AccordionSummary, AccordionDetails } from '@mui/material'
+import { ExpandMore } from '@mui/icons-material'
 import styles from './styles.module.css';
 import { postEstacion } from "@/services";
 import { IngresoEstacionValues } from "@/utils/interfaces";
@@ -145,31 +146,31 @@ const SuscribirEstacion = () => {
   const resumenFields = [
     {
       label: 'Nombre',
-      value: ingresoEstacion.description.metadata
+      value: 'xxxxx'
     },
     {
       label: 'Apellido',
-      value: ingresoEstacion.description.metadata
+      value: 'xxxxx'
     },
     {
       label: 'Email',
-      value: ingresoEstacion.description.metadata
+      value: 'xxxxx'
     },
     {
       label: 'Descripción',
-      value: ingresoEstacion.description.value
+      value: 'xxxxx'
     },
     {
       label: 'Coordenadas/Locación',
-      value: ingresoEstacion.location.coordinates,
+      value: 'xxxxx',
     },
     {
       label: 'Tipo de sensor',
-      value: ingresoSensor.description.value,
+      value: 'xxxxx',
     },
     {
       label: 'Estación N°',
-      value: ingresoSensor.station_id.value,
+      value: 'xxxxx',
     },
   ]
 
@@ -337,18 +338,35 @@ const SuscribirEstacion = () => {
               ) :
                 <Grid lg={12} xs={12} className={styles.inputsContainer}>
                   <Grid display={'flex'} justifyContent={'center'} container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 4 }} padding={12}>
-                    {resumenFields.map((index, i) => (
-                      <Grid item key={i}>
-                        <TextField label={index.label} value={index.value} variant="outlined" sx={{
-                          '& .MuiOutlinedInput-notchedOutline': {
-                            borderColor: 'rgba(255, 255, 255, 0.63)',
-                          },
-                          '& .MuiInputLabel-root': {
-                            color: 'rgba(255, 255, 255, 0.63)',
-                          },
-                        }} />
-                      </Grid>
-                    ))}
+                    <Accordion style={{ backgroundColor: 'rgb(35, 48, 68)', border: '2px solid #0288d1' }}>
+                      <AccordionSummary
+                        expandIcon={<ExpandMore color="info" />}
+                        aria-controls="panel1a-content"
+                        id="panel1a-header"
+                      >
+                        <Typography color={'rgba(255, 255, 255, 0.63)'}>Estación N°15</Typography>
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        <Grid display={'flex'} justifyContent={'center'} container>
+                          {resumenFields.map((item, i) => (
+                            <TextField key={i} label={item.label} value={item.value}
+                              sx={{
+                                '& .MuiOutlinedInput-notchedOutline': {
+                                  borderColor: 'rgba(255, 255, 255, 0.63)',
+                                },
+                                '& .MuiInputLabel-root': {
+                                  color: 'rgba(255, 255, 255, 0.63)',
+                                },
+                                '& .MuiOutlinedInput-input': {
+                                  color: 'rgba(255, 255, 255, 0.63)',
+                                },
+                                margin: '12px'
+                              }}
+                            />
+                          ))}
+                        </Grid>
+                      </AccordionDetails>
+                    </Accordion>
                   </Grid>
                 </Grid>
               )
