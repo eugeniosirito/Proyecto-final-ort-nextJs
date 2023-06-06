@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { Accordion, AccordionDetails, AccordionSummary, Backdrop, Box, Button, Card, CardActionArea, CardContent, Chip, Divider, Fade, Grid, Modal, TextField, Tooltip, Typography, Zoom } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Backdrop, Box, Button, Card, CardActionArea, CardContent, Chip, CircularProgress, Divider, Fade, Grid, Modal, TextField, Tooltip, Typography, Zoom } from '@mui/material';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import styles from './styles.module.css';
 import { getEstaciones } from '@/services';
 import { IngresoEstacionValues } from '@/utils/interfaces';
 import { ExpandMore } from '@mui/icons-material';
+import clsx from 'clsx';
 
-const HomeTab = () => {
+const UserPanel = () => {
 
   const [estaciones, setEstaciones] = useState<IngresoEstacionValues[]>([]);
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -60,24 +63,13 @@ const HomeTab = () => {
     getEstaciones()
       .then(response => {
         setEstaciones(response);
+        setIsLoading(false);
         console.log('estaciones response', estaciones);
       })
       .catch(error => {
         console.log(error);
       });
   }, []);
-
-  const style = {
-    position: 'absolute' as 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-  };
 
   const resumenFields = [
     {
@@ -112,7 +104,7 @@ const HomeTab = () => {
 
   return (
     <>
-      <Typography paddingX={3} paddingY={2} color={'white'} variant='h3' textAlign={'center'}>Vista de administrador</Typography>
+      <Typography paddingX={3} paddingY={2} color={'white'} variant='h3' textAlign={'center'}>Vista de usuario</Typography>
       <Divider variant="middle" sx={{ backgroundColor: 'rgba(255, 255, 255, 0.73)', paddingLeft: '12px', marginY: '12px' }} />
       {/*       <Typography paddingX={3} paddingY={2} color={'white'} variant='h4'>Available Modules</Typography>
       <Grid container display={'flex'} flexDirection={'row'} paddingX={3}>
@@ -130,11 +122,15 @@ const HomeTab = () => {
         ))}
       </Grid>
       <Divider variant="middle" sx={{ backgroundColor: 'rgba(255, 255, 255, 0.73)', paddingLeft: '12px', marginTop: '28px' }} /> */}
-      <Grid container>
-        <Grid item lg={12} paddingX={3} paddingTop={3}>
-          {estaciones.map((item, i) => (
-            <>
-              {item.estado.value === false ? (
+      <Grid container display={'flex'} justifyContent={'center'}>
+        {isLoading ? (
+          <Grid style={{ transform: 'translate(0%, 250%)' }}>
+            <CircularProgress size={'80px'} />
+          </Grid>
+        ) : (
+          <Grid item lg={12} paddingX={3} paddingTop={3} className='pageAnimation-containers'>
+            {estaciones.map((item, i) => (
+              <>
                 <>
                   <Accordion className={styles.accordionContainer}>
                     <AccordionSummary
@@ -152,7 +148,15 @@ const HomeTab = () => {
                           </Grid>
                         </Grid>
                         <Grid item paddingRight={1}>
-                          <Chip label="Pendiente de aprobación" sx={{ backgroundColor: '#BBB000', fontWeight: 'bold', fontSize: '14px' }} />
+                          <Chip
+                            label={item.estado.value === 'PENDIENTE' ? 'Pendiente de aprobación' : item.estado.value === 'ACEPTADO' ? 'Aceptado' : 'Rechazado'}
+                            sx={{ fontWeight: 'bold', fontSize: '14px' }}
+                            className={clsx({
+                              'color-chip-warning': item.estado.value === 'PENDIENTE',
+                              'color-chip-success': item.estado.value === 'ACEPTADO',
+                              'color-chip-error': item.estado.value === 'RECHAZADO',
+                            })}
+                          />
                         </Grid>
                       </Grid>
                     </AccordionSummary>
@@ -186,37 +190,13 @@ const HomeTab = () => {
                     </Grid>
                   </Accordion>
                 </>
-              ) : null}
-            </>
-          ))}
-          <Modal
-            aria-labelledby="transition-modal-title"
-            aria-describedby="transition-modal-description"
-            open={open}
-            onClose={handleClose}
-            closeAfterTransition
-            slots={{ backdrop: Backdrop }}
-            slotProps={{
-              backdrop: {
-                timeout: 500,
-              },
-            }}
-          >
-            <Fade in={open}>
-              <Box sx={style}>
-                <Typography id="transition-modal-title" variant="h6" component="h2">
-                  asd
-                </Typography>
-                <Typography id="transition-modal-description" sx={{ mt: 2 }}>
-                  Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-                </Typography>
-              </Box>
-            </Fade>
-          </Modal>
-        </Grid>
+              </>
+            ))}
+          </Grid>
+        )}
       </Grid >
     </>
   )
 }
 
-export default HomeTab;
+export default UserPanel;

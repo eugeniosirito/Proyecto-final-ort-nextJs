@@ -10,6 +10,22 @@ body {
   animation: slide-in-fwd-center 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
 }
 
+.color-chip-warning {
+  background-color: #bbb000;
+}
+
+.color-chip-success {
+  background-color: #2e7d32;
+}
+
+.color-chip-error {
+  background-color: #aa2626;
+}
+
+.pageAnimation-containers {
+  animation: slide-in-fwd-center 2s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
 @keyframes slide-in-fwd-center {
   0% {
     transform: translateZ(-1400px);

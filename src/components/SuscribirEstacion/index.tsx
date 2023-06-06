@@ -33,7 +33,7 @@ const SuscribirEstacion = () => {
       value: 'user_15'
     },
     estado: {
-      value: false
+      value: 'PENDIENTE'
     }
   })
   const [isButtonDisable, setIsButtonDisable] = useState(true);
@@ -197,7 +197,7 @@ const SuscribirEstacion = () => {
                 value: 'user_15'
               },
               estado: {
-                value: false
+                value: ''
               }
             });
             setIngresoOk(true);

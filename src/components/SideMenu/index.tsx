@@ -18,9 +18,13 @@ const SideMenu = () => {
       path: '/addstation'
     },
     {
-      name: 'Panel de control',
-      path: '/control-panel'
-    }
+      name: 'Panel de Administrador',
+      path: '/control-panel-admin'
+    },
+    {
+      name: 'Panel de Usuario',
+      path: '/control-panel-user'
+    },
   ]
 
   return (

@@ -12,6 +12,6 @@ export interface IngresoEstacionValues {
     value: string;
   };
   estado: {
-    value: boolean;
+    value: string;
   };
 }

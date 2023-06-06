@@ -1,0 +1,48 @@
+/* .cardsContainer {
+  align-items: center;
+  background-color: rgb(35, 48, 68);
+  border: 1px solid rgba(255, 255, 255, 0.23);
+  border-radius: 4px;
+  box-shadow: 2px 3px 6px 0px #000;
+  display: flex;
+  justify-content: center;
+}
+
+.cardsContainer:hover {
+  background-color: rgb(24, 33, 46);
+  box-shadow: 0px 0px 0px 0px #000;
+  cursor: pointer;
+  transition: 0.1s;
+}
+
+.notificationContainer {
+  background-color: rgb(35, 48, 68);
+} */
+
+.accordionContainer {
+  background-color: rgb(35, 48, 68);
+  box-shadow: 2px 3px 6px 0px #000;
+  margin-bottom: 16px;
+  padding: 12px;
+}
+
+.accordionContainer:hover {
+  background-color: rgb(30, 41, 58);
+}
+
+.successButton {
+  background-color: #2e7d32;
+  margin-right: 14px;
+}
+
+.errorButton {
+  background-color: #aa2626;
+}
+
+.successButton:hover {
+  background-color: #246526;
+}
+
+.errorButton:hover {
+  background-color: #8c1e1e;
+}
