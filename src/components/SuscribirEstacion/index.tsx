@@ -31,6 +31,9 @@ const SuscribirEstacion = () => {
     },
     user: {
       value: 'user_15'
+    },
+    estado: {
+      value: false
     }
   })
   const [isButtonDisable, setIsButtonDisable] = useState(true);
@@ -192,6 +195,9 @@ const SuscribirEstacion = () => {
               },
               user: {
                 value: 'user_15'
+              },
+              estado: {
+                value: false
               }
             });
             setIngresoOk(true);
@@ -338,7 +344,7 @@ const SuscribirEstacion = () => {
                   </Grid>
                   <Grid paddingTop={3}>
                     <Button size="large" onClick={notify} /* disabled={isButtonDisable} */ variant="contained" className={styles.loadingButtonStatic}>
-                      Ingresar estación
+                      Ingresar Sensor
                     </Button>
                   </Grid>
                 </Grid>

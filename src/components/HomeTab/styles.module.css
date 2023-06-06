@@ -1,4 +1,4 @@
-.cardsContainer {
+/* .cardsContainer {
   align-items: center;
   background-color: rgb(35, 48, 68);
   border: 1px solid rgba(255, 255, 255, 0.23);
@@ -17,4 +17,21 @@
 
 .notificationContainer {
   background-color: rgb(35, 48, 68);
+} */
+
+.successButton {
+  background-color: #2e7d32;
+  margin-right: 14px;
+}
+
+.errorButton {
+  background-color: #aa2626;
+}
+
+.successButton:hover {
+  background-color: #246526;
+}
+
+.errorButton:hover {
+  background-color: #8c1e1e;
 }
