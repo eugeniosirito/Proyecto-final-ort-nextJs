@@ -3,6 +3,7 @@ import Footer from "../Footer";
 import Header from "../Header";
 import SideMenu from "../SideMenu";
 import { Space_Grotesk } from "next/font/google";
+import styles from "./styles.module.css";
 
 const spaceFont = Space_Grotesk({
   weight: "700",
@@ -22,6 +23,7 @@ export default function Layout({ children }) {
           display={"flex"}
           flexDirection={"column"}
           sx={{ backgroundColor: "rgb(35, 48, 68)", height: "100vh" }}
+          className={styles.sideMenuContainer}
         >
           <SideMenu />
         </Grid>

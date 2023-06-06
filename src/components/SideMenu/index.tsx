@@ -25,7 +25,7 @@ const SideMenu = () => {
 
   return (
     <>
-      <Grid display={'flex'} flexDirection={'column'}>
+      <Grid display={'flex'} flexDirection={'column'} className={styles.sideMenuContainer}>
         <List>
           {links.map((item, i) => (
             <ListItem key={i}>

@@ -351,7 +351,7 @@ const SuscribirEstacion = () => {
               ) :
                 <Grid lg={12} xs={12} className={styles.inputsContainer}>
                   <Grid display={'flex'} justifyContent={'center'} container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 4 }} padding={12}>
-                    <Accordion style={{ backgroundColor: 'rgb(35, 48, 68)', border: '2px solid #0288d1' }}>
+                    <Accordion style={{ backgroundColor: 'rgb(35, 48, 68)', boxShadow: '2px 3px 6px 0px #000', padding: '12px' }}>
                       <AccordionSummary
                         expandIcon={<ExpandMore color="info" />}
                         aria-controls="panel1a-content"
@@ -359,11 +359,11 @@ const SuscribirEstacion = () => {
                       >
                         <Grid container justifyContent={"space-between"}>
                           <Grid item display={'flex'} alignItems={'center'}>
-                            <Typography color={'rgba(255, 255, 255, 0.63)'}>Estación N°15</Typography>
+                            <Typography color={'rgba(255, 255, 255, 0.63)'} variant='h5'>Estación N°15</Typography>
                           </Grid>
                           <Tooltip title={'Un administrador estara revisando y aprobando esta estación.'} placement="top" arrow TransitionComponent={Zoom}>
                             <Grid item paddingRight={1}>
-                              <Chip label="En aprobación" sx={{ backgroundColor: '#D1C500' }} />
+                              <Chip label="Esperando aprobación" sx={{ backgroundColor: '#BBB000', fontWeight: 'bold', fontSize: '14px' }} />
                             </Grid>
                           </Tooltip>
                         </Grid>

@@ -136,7 +136,7 @@ const HomeTab = () => {
             <>
               {item.estado.value === false ? (
                 <>
-                  <Accordion style={{ backgroundColor: 'rgb(35, 48, 68)', marginBottom: '4px', padding: '12px' }}>
+                  <Accordion className={styles.accordionContainer}>
                     <AccordionSummary
                       expandIcon={<ExpandMore color="info" />}
                       aria-controls="panel1a-content"
@@ -152,7 +152,7 @@ const HomeTab = () => {
                           </Grid>
                         </Grid>
                         <Grid item paddingRight={1}>
-                          <Chip label="Pendiente de aprobación" sx={{ backgroundColor: '#D1C500' }} />
+                          <Chip label="Pendiente de aprobación" sx={{ backgroundColor: '#BBB000', fontWeight: 'bold', fontSize: '14px' }} />
                         </Grid>
                       </Grid>
                     </AccordionSummary>
