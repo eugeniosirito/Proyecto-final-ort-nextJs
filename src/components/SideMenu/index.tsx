@@ -1,12 +1,11 @@
-import React from 'react'
-import { Box, Button, Container, Divider, Drawer, Grid, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import React, { useState } from 'react'
+import { Divider, Grid, List, ListItem, ListItemIcon } from '@mui/material';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 import Link from 'next/link';
 import styles from './styles.module.css';
 
 
-const SideMenu = () => {
+const SideMenu = ({ setStartProgress }: any) => {
 
   const links = [
     {
@@ -36,7 +35,9 @@ const SideMenu = () => {
               <ListItemIcon className={styles.listBtnColor}>
                 <InboxIcon />
               </ListItemIcon>
-              <Link href={item.path} className={styles.listBtnColor}>{item.name}</Link>
+              <Link onClick={() => {
+                setStartProgress(true)
+              }} href={item.path} className={styles.listBtnColor}>{item.name}</Link>
             </ListItem>
           ))}
         </List>

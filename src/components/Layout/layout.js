@@ -1,16 +1,11 @@
+import React, { useState } from "react";
 import { Grid } from "@mui/material";
 import Footer from "../Footer";
 import Header from "../Header";
 import SideMenu from "../SideMenu";
-import { Space_Grotesk } from "next/font/google";
 import styles from "./styles.module.css";
 
-const spaceFont = Space_Grotesk({
-  weight: "700",
-  subsets: ["latin-ext"],
-});
-
-export default function Layout({ children }) {
+export default function Layout({ children, setStartProgress }) {
   return (
     <div>
       <Header />
@@ -25,7 +20,7 @@ export default function Layout({ children }) {
           sx={{ backgroundColor: "rgb(35, 48, 68)", height: "100vh" }}
           className={styles.sideMenuContainer}
         >
-          <SideMenu />
+          <SideMenu setStartProgress={setStartProgress} />
         </Grid>
         <Grid lg={10.5} md={10} sm={9} xs={12}>
           {children}

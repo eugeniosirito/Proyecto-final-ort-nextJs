@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Accordion, AccordionDetails, AccordionSummary, Backdrop, Box, Button, Card, CardActionArea, CardContent, Chip, CircularProgress, Divider, Fade, Grid, Modal, TextField, Tooltip, Typography, Zoom } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Backdrop, Button, Chip, CircularProgress, Divider, Grid, TextField, Typography, Zoom } from '@mui/material';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import styles from './styles.module.css';
 import { getEstaciones } from '@/services';
@@ -12,52 +12,6 @@ const UserPanel = () => {
   const [estaciones, setEstaciones] = useState<IngresoEstacionValues[]>([]);
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
-  const cardItems = [
-    {
-      title: 'Client',
-      icon: <HomeOutlinedIcon fontSize='large' color='primary' />,
-      button: 'Go to Client'
-    },
-    {
-      title: 'Help',
-      icon: <HomeOutlinedIcon fontSize='large' color='primary' />,
-      button: 'Go to Help'
-    },
-    {
-      title: 'Sites',
-      icon: <HomeOutlinedIcon fontSize='large' color='primary' />,
-      button: 'Go to Sites'
-    },
-    {
-      title: 'Email',
-      icon: <HomeOutlinedIcon fontSize='large' color='primary' />,
-      button: 'Go to Email'
-    },
-    {
-      title: 'DNS',
-      icon: <HomeOutlinedIcon fontSize='large' color='primary' />,
-      button: 'Go to DNS'
-    },
-    {
-      title: 'Monitor',
-      icon: <HomeOutlinedIcon fontSize='large' color='primary' />,
-      button: 'Go to Monitor'
-    },
-    {
-      title: 'Tools',
-      icon: <HomeOutlinedIcon fontSize='large' color='primary' />,
-      button: 'Go to Tools'
-    },
-    {
-      title: 'System',
-      icon: <HomeOutlinedIcon fontSize='large' color='primary' />,
-      button: 'Go to System'
-    },
-  ];
 
   useEffect(() => {
     getEstaciones()
