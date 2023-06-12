@@ -1,29 +1,3 @@
-.leftContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.rightContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.estacionImgContainer {
-  opacity: 1;
-}
-
-.estacionNoImg {
-  opacity: 0.2;
-}
-
-.sideMenu {
-  background-color: rgb(35, 48, 68);
-  height: 100vh;
-}
-
-.mainBgc {
-  background-color: rgb(27, 38, 53);
+.buttonRegisterStation {
+  background-color: #1976d2;
 }

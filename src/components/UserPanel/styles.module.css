@@ -30,8 +30,8 @@
   background-color: rgb(30, 41, 58);
 }
 
-.successButton {
-  background-color: #2e7d32;
+.warningButton {
+  background-color: #bb7300;
   margin-right: 14px;
 }
 
@@ -39,8 +39,8 @@
   background-color: #aa2626;
 }
 
-.successButton:hover {
-  background-color: #246526;
+.warningButton:hover {
+  background-color: #975d00;
 }
 
 .errorButton:hover {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Grid, TextField, Button, Typography, Box, Stepper, Step, StepLabel, Tooltip, Zoom, Accordion, AccordionSummary, AccordionDetails, Chip } from '@mui/material'
+import { Grid, TextField, Button, Typography, Box, Stepper, Step, StepLabel, Tooltip, Zoom, Accordion, AccordionSummary, AccordionDetails, Chip, CircularProgress } from '@mui/material'
 import { ExpandMore } from '@mui/icons-material'
 import styles from './styles.module.css';
 import { postEstacion } from "@/services";
@@ -7,6 +7,7 @@ import { IngresoEstacionValues } from "@/utils/interfaces";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
 import { putEstacion } from "@/services";
+import Router from "next/router";
 
 const SuscribirEstacion = () => {
   const [ingresoSensor, setIngresoSensor] = useState({
@@ -33,11 +34,15 @@ const SuscribirEstacion = () => {
       value: 'user_15'
     },
     estado: {
-      value: 'PENDIENTE'
+      value: 'RECHAZADO'
     }
   })
   const [isButtonDisable, setIsButtonDisable] = useState(true);
   const [ingresoOk, setIngresoOk] = useState(false);
+  const [stationInputDisable, setStationInputDisable] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  /* Validates if the required fields are filled  */
 
   useEffect(() => {
     if ((ingresoEstacion.description.value == '' || ingresoEstacion.location.coordinates.length == 0)) {
@@ -46,6 +51,8 @@ const SuscribirEstacion = () => {
       setIsButtonDisable(false)
     }
   }, [ingresoEstacion.description.value, ingresoEstacion.location.coordinates])
+
+  /* Both handles takes care of filling the attributes of each object */
 
   const handleChange = (fieldName: any, value: any) => {
     setIngresoEstacion(prevState => ({
@@ -61,7 +68,8 @@ const SuscribirEstacion = () => {
     }));
   };
 
-  /* acá empieza el step */
+  /* Here starts the stepper */
+
   const steps = ['Estación', 'Sensor', 'Resumen'];
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set<number>());
@@ -108,6 +116,8 @@ const SuscribirEstacion = () => {
     setActiveStep(0);
   };
 
+  /* the input constructors for the TextField component */
+
   const ingresoEstacionFields = [
     {
       label: 'Descripción',
@@ -146,6 +156,8 @@ const SuscribirEstacion = () => {
     },
   ]
 
+  /* the input constructor for the TextField component for the resumenFields (mocked) */
+
   const resumenFields = [
     {
       label: 'Nombre',
@@ -177,6 +189,8 @@ const SuscribirEstacion = () => {
     },
   ]
 
+  /* This function is in charge of sending the body of the station object to make a post request  */
+  /* Also handles the Toast popUp */
   const notify = () => {
     const returnPostPromise = () => {
       return new Promise(async (resolve, reject) => {
@@ -231,6 +245,13 @@ const SuscribirEstacion = () => {
     )
   };
 
+  /* Redirects to the user panel */
+
+  const handleClick = () => {
+    Router.push('/control-panel-user');
+    setIsLoading(true);
+  };
+
   return (
     <>
       <Box paddingTop={5}>
@@ -260,13 +281,13 @@ const SuscribirEstacion = () => {
                 <Step key={label} {...stepProps}>
                   <StepLabel sx={{
                     '& .MuiStepLabel-label.Mui-active': {
-                      color: 'white',
+                      color: 'rgba(255, 255, 255, 0.63)',
                     },
                     '& .MuiStepLabel-label.Mui-completed': {
-                      color: 'white',
+                      color: 'rgba(255, 255, 255, 0.63)',
                     },
                     '& .MuiStepLabel-label': {
-                      color: 'white',
+                      color: 'rgba(255, 255, 255, 0.63)',
                     },
                   }} className={styles.stepperStyles} {...labelProps}>{label}</StepLabel>
                 </Step>
@@ -296,6 +317,7 @@ const SuscribirEstacion = () => {
                           type={field.type}
                           label={field.label}
                           value={field.value}
+                          disabled={stationInputDisable}
                           onChange={e => field.handleChange(e.target.value)}
                           sx={{
                             '& .MuiOutlinedInput-notchedOutline': {
@@ -314,7 +336,7 @@ const SuscribirEstacion = () => {
                     ))}
                   </Grid>
                   <Grid paddingTop={3}>
-                    <Button size="large" onClick={notify} disabled={isButtonDisable} variant="contained" className={styles.loadingButtonStatic}>
+                    <Button size="large" onClick={() => { notify(); setStationInputDisable(true) }} disabled={isButtonDisable} variant="contained" className={styles.loadingButtonStatic}>
                       Ingresar estación
                     </Button>
                   </Grid>
@@ -350,7 +372,8 @@ const SuscribirEstacion = () => {
                 </Grid>
               ) :
                 <Grid lg={12} xs={12} className={styles.inputsContainer}>
-                  <Grid display={'flex'} justifyContent={'center'} container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 4 }} padding={12}>
+                  <Grid display={'flex'} justifyContent={'center'} container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 4 }} padding={8}>
+                    <Typography variant="h4" color={'rgba(255, 255, 255, 0.63)'} paddingBottom={4}>Resumen de la nueva estación creada.</Typography>
                     <Accordion style={{ backgroundColor: 'rgb(35, 48, 68)', boxShadow: '2px 3px 6px 0px #000', padding: '12px' }}>
                       <AccordionSummary
                         expandIcon={<ExpandMore color="info" />}
@@ -363,7 +386,7 @@ const SuscribirEstacion = () => {
                           </Grid>
                           <Tooltip title={'Un administrador estara revisando y aprobando esta estación.'} placement="top" arrow TransitionComponent={Zoom}>
                             <Grid item paddingRight={1}>
-                              <Chip label="Esperando aprobación" sx={{ backgroundColor: '#BBB000', fontWeight: 'bold', fontSize: '14px' }} />
+                              <Chip label="Pendiente de aprobación" sx={{ backgroundColor: '#BBB000', fontWeight: 'bold', fontSize: '14px' }} />
                             </Grid>
                           </Tooltip>
                         </Grid>
@@ -389,9 +412,9 @@ const SuscribirEstacion = () => {
                         </Grid>
                       </AccordionDetails>
                     </Accordion>
-                    <Grid paddingTop={3}>
-                      <Button size="large" variant="contained" className={styles.loadingButtonStatic}>
-                        Ir al resumen
+                    <Grid paddingTop={3} marginTop={4}>
+                      <Button size="large" variant="contained" onClick={handleClick} className={styles.loadingButtonStatic} style={{ width: '200px' }}>
+                        {isLoading ? <CircularProgress color="inherit" /> : 'Ver estaciones'}
                       </Button>
                     </Grid>
                   </Grid>

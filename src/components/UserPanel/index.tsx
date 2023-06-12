@@ -106,22 +106,6 @@ const UserPanel = () => {
     <>
       <Typography paddingX={3} paddingY={2} color={'white'} variant='h3' textAlign={'center'}>Vista de usuario</Typography>
       <Divider variant="middle" sx={{ backgroundColor: 'rgba(255, 255, 255, 0.73)', paddingLeft: '12px', marginY: '12px' }} />
-      {/*       <Typography paddingX={3} paddingY={2} color={'white'} variant='h4'>Available Modules</Typography>
-      <Grid container display={'flex'} flexDirection={'row'} paddingX={3}>
-        {cardItems.map((item, i) => (
-          <Grid key={i} item lg={2} padding={0} paddingRight={2} paddingTop={2}>
-            <Card className={styles.cardsContainer}>
-              <CardContent>
-                <Typography variant='h5' textAlign={'center'} color={'white'}>{item.title}</Typography>
-                <Grid item display={'flex'} justifyContent={'center'} paddingTop={0}>
-                  <Button sx={{ backgroundColor: 'blue' }}>{item.button}</Button>
-                </Grid>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
-      <Divider variant="middle" sx={{ backgroundColor: 'rgba(255, 255, 255, 0.73)', paddingLeft: '12px', marginTop: '28px' }} /> */}
       <Grid container display={'flex'} justifyContent={'center'}>
         {isLoading ? (
           <Grid style={{ transform: 'translate(0%, 250%)' }}>
@@ -181,11 +165,11 @@ const UserPanel = () => {
                       </Grid>
                     </AccordionDetails>
                     <Grid paddingTop={3} display={'flex'} justifyContent={'flex-end'}>
-                      <Button size="large" variant="contained" className={styles.successButton}>
-                        Aprobar
+                      <Button size="large" variant="contained" className={styles.warningButton}>
+                        Editar
                       </Button>
                       <Button size="large" variant="contained" className={styles.errorButton}>
-                        Rechazar
+                        Eliminar
                       </Button>
                     </Grid>
                   </Accordion>
