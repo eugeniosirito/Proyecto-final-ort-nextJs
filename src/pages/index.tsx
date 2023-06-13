@@ -14,8 +14,9 @@ export default function Home() {
     <div>
       <LinearProgessCustom startProgress={startProgress} />
       <Header />
-      <Grid container lg={12}>
+      <Grid container>
         <Grid
+          item
           lg={1.5}
           md={2}
           sm={3}
@@ -27,7 +28,7 @@ export default function Home() {
         >
           <SideMenu setStartProgress={setStartProgress} />
         </Grid>
-        <Grid lg={10.5} md={10} sm={9} xs={12} display={'flex'} justifyContent={'center'}>
+        <Grid item lg={10.5} md={10} sm={9} xs={12} display={'flex'} justifyContent={'center'}>
           <HomePage />
         </Grid>
         <Footer />

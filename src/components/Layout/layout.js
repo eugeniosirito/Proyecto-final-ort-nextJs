@@ -11,18 +11,22 @@ export default function Layout({ children, setStartProgress }) {
       <Header />
       <Grid container lg={12}>
         <Grid
+          item
           lg={1.5}
           md={2}
           sm={3}
           xs={3}
           display={"flex"}
           flexDirection={"column"}
-          sx={{ backgroundColor: "rgb(35, 48, 68)", height: "100vh" }}
+          sx={{
+            backgroundColor: "rgb(35, 48, 68)",
+            height: "100vh",
+          }}
           className={styles.sideMenuContainer}
         >
           <SideMenu setStartProgress={setStartProgress} />
         </Grid>
-        <Grid lg={10.5} md={10} sm={9} xs={12}>
+        <Grid item lg={10.5} md={10} sm={9} xs={12}>
           {children}
         </Grid>
         <Footer />

@@ -1,12 +1,27 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Router from 'next/router';
 import { Grid, Button, Typography, CircularProgress } from '@mui/material'
 import styles from './styles.module.css';
+import { getEstaciones } from '@/services';
 
 
 const HomePage = () => {
 
   const [isLoading, setIsLoading] = useState(false);
+  const [estaciones, setEstaciones] = useState({});
+
+
+  useEffect(() => {
+    getEstaciones()
+      .then(response => {
+        setEstaciones(response);
+        setIsLoading(false);
+        console.log('estaciones response', estaciones);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }, []);
 
   const handleClick = () => {
     Router.push('/addstation');

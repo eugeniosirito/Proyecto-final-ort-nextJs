@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Accordion, AccordionDetails, AccordionSummary, Backdrop, Button, Chip, CircularProgress, Divider, Grid, TextField, Typography, Zoom } from '@mui/material';
-import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import { Accordion, AccordionDetails, AccordionSummary, Backdrop, Box, Button, Chip, CircularProgress, Divider, Grid, SpeedDial, SpeedDialAction, SpeedDialIcon, TextField, Typography, Zoom } from '@mui/material';
 import styles from './styles.module.css';
 import { getEstaciones } from '@/services';
 import { IngresoEstacionValues } from '@/utils/interfaces';
@@ -54,7 +53,7 @@ const UserPanel = () => {
       label: 'Estación N°',
       value: 'xxxxx',
     },
-  ]
+  ];
 
   return (
     <>

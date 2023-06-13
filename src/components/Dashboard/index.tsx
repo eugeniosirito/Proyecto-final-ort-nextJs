@@ -66,7 +66,7 @@ const DashCards = () => {
     <>
       <Grid container display={'flex'} flexDirection={'column'} lg={12}>
         <Typography textAlign={'center'} paddingLeft={2} paddingY={2} paddingBottom={0} color={'white'} variant='h5'>Selecciona tu estación</Typography>
-        <Grid lg={12} paddingLeft={2} paddingY={2}>
+        <Grid item lg={12} paddingLeft={2} paddingY={2}>
           <Select fullWidth className={styles.boxShadowCss} sx={{ backgroundColor: 'rgb(35, 48, 68)', color: 'white' }}
             value={id}
             onChange={handleChange}

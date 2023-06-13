@@ -10,6 +10,8 @@ import { putEstacion } from "@/services";
 import Router from "next/router";
 
 const SuscribirEstacion = () => {
+
+  /*  objeto como tiene que ser enviado al back (a modo de prueba, ponerlo como lo pide el back)  */
   const [ingresoSensor, setIngresoSensor] = useState({
     description: {
       value: '',
@@ -20,6 +22,8 @@ const SuscribirEstacion = () => {
       metadata: '',
     }
   })
+
+  /* objeto como tiene que ser enviado al back (el atributo estado está a modo de prueba) */
   const [ingresoEstacion, setIngresoEstacion] = useState<IngresoEstacionValues>({
     id: '',
     description: {
@@ -116,7 +120,8 @@ const SuscribirEstacion = () => {
     setActiveStep(0);
   };
 
-  /* the input constructors for the TextField component */
+  /* the input constructors for the TextField component (esto se encarga de mapear el componente y la función handleChange de guardar
+    lo que se va escribiendo en el input en el objeto mas arriba) */
 
   const ingresoEstacionFields = [
     {
@@ -141,6 +146,8 @@ const SuscribirEstacion = () => {
     },
   ];
 
+  /* igual que el anterior pero para los sensores (a modo de prueba, ponerlo como lo pide el back) */
+
   const ingresoSensorFields = [
     {
       label: 'Tipo de sensor',
@@ -156,7 +163,8 @@ const SuscribirEstacion = () => {
     },
   ]
 
-  /* the input constructor for the TextField component for the resumenFields (mocked) */
+  /* the input constructor for the TextField component for the resumenFields (mockeado, acá se podría llamar al getEstacion 
+  recientemente creada y completar todo el "resumen" con esos datos) */
 
   const resumenFields = [
     {
@@ -194,9 +202,11 @@ const SuscribirEstacion = () => {
   const notify = () => {
     const returnPostPromise = () => {
       return new Promise(async (resolve, reject) => {
+        /* si es el primer step hace el post */
         if (activeStep === 0) {
           try {
             const resultado = await postEstacion(ingresoEstacion);
+            /* resetea el objeto */
             setIngresoEstacion({
               id: '',
               description: {
@@ -208,7 +218,7 @@ const SuscribirEstacion = () => {
                 metadata: {},
               },
               user: {
-                value: 'user_15'
+                value: ''
               },
               estado: {
                 value: ''
@@ -222,6 +232,7 @@ const SuscribirEstacion = () => {
             reject(error)
           }
         } else {
+          /* si es el segundo step hace el put (o lo que necesite para el sensor) */
           try {
             const resultado = await putEstacion(ingresoSensor.station_id.value, ingresoSensor);
             setIngresoOk(true);
@@ -255,14 +266,14 @@ const SuscribirEstacion = () => {
   return (
     <>
       <Box paddingTop={5}>
-        <Grid display={'flex'} flexDirection={'column'} padding={5}
+        <Grid item lg={10} display={'flex'} flexDirection={'column'} padding={5}
           sx={{
             backgroundColor: 'rgb(35, 48, 68)',
             margin: '0 auto',
             borderRadius: '12px',
             boxShadow: '2px 3px 6px 0px #000'
           }}
-          lg={10}>
+        >
           <Stepper activeStep={activeStep}>
             {steps.map((label, index) => {
               const stepProps: { completed?: boolean } = {};
@@ -307,7 +318,7 @@ const SuscribirEstacion = () => {
           ) : (
             <React.Fragment>
               {activeStep === 0 ? (
-                <Grid lg={12} xs={12} className={styles.inputsContainer}>
+                <Grid container className={styles.inputsContainer}>
                   <Typography textAlign={'center'} variant="h4" paddingTop={4} color={'white'}>Ingrese su estación</Typography>
                   <Grid display={'flex'} justifyContent={'center'} container rowSpacing={2} paddingTop={6} >
                     {ingresoEstacionFields.map((field, index) => (
@@ -342,7 +353,7 @@ const SuscribirEstacion = () => {
                   </Grid>
                 </Grid>
               ) : (activeStep === 1 ? (
-                <Grid lg={12} xs={12} className={styles.inputsContainer}>
+                <Grid container className={styles.inputsContainer}>
                   <Typography textAlign={'center'} variant="h4" paddingTop={4} color={'white'}>Ingrese un sensor (Opcional)</Typography>
                   <Grid display={'flex'} justifyContent={'center'} container rowSpacing={2} paddingTop={6}>
                     {ingresoSensorFields.map((field, index) => (
@@ -371,7 +382,7 @@ const SuscribirEstacion = () => {
                   </Grid>
                 </Grid>
               ) :
-                <Grid lg={12} xs={12} className={styles.inputsContainer}>
+                <Grid container className={styles.inputsContainer}>
                   <Grid display={'flex'} justifyContent={'center'} container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 4 }} padding={8}>
                     <Typography variant="h4" color={'rgba(255, 255, 255, 0.63)'} paddingBottom={4}>Resumen de la nueva estación creada.</Typography>
                     <Accordion style={{ backgroundColor: 'rgb(35, 48, 68)', boxShadow: '2px 3px 6px 0px #000', padding: '12px' }}>

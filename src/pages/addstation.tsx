@@ -2,6 +2,7 @@ import { useState } from 'react';
 import SuscribirEstacion from '@/components/SuscribirEstacion'
 import Layout from '@/components/Layout/layout'
 import { ToastContainer, Slide } from 'react-toastify';
+import LinearProgessCustom from '@/components/LinearProgressCustom';
 
 
 export default function AddStation() {
@@ -9,6 +10,7 @@ export default function AddStation() {
 
   return (
     <>
+      <LinearProgessCustom startProgress={startProgress} />
       <Layout setStartProgress={setStartProgress}>
         <div className='page-animation'>
           <SuscribirEstacion />
