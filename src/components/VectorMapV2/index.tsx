@@ -26,12 +26,8 @@ const VectorMapV2 = () => {
       markers={[
         // posición y nombre del marcador en el mapa
         {
-          latLng: [-37.597205, -65.678607], // Aquí puedes colocar las coordenadas de latitud y longitud de tu punto
+          latLng: [-39.597205, -65.678607], // Aquí puedes colocar las coordenadas de latitud y longitud de tu punto
           name: "Punto1, Estación de humedad",
-        },
-        {
-          latLng: [-37.597205, -65.678607], // Aquí puedes colocar las coordenadas de latitud y longitud de tu punto
-          name: "Punto2, Estación de temperatura",
         },
         {
           latLng: [-25.078169, -63.760239], // Aquí puedes colocar las coordenadas de latitud y longitud de tu punto

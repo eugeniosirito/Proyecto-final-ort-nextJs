@@ -9,6 +9,15 @@
   background-color: rgb(9, 39, 84);
 }
 
+.classicButton {
+  background-color: #2659bf;
+  margin-right: 14px;
+}
+
+.classicButton:hover {
+  background-color: #1c428d;
+}
+
 .warningButton {
   background-color: #bb7300;
   margin-right: 14px;

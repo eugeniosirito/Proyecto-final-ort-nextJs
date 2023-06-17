@@ -4,7 +4,6 @@ import UserPanel from '@/components/UserPanel'
 import LinearProgessCustom from '@/components/LinearProgressCustom';
 
 export default function AddStation() {
-
   const [startProgress, setStartProgress] = useState(false);
 
   return (

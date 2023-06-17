@@ -6,9 +6,56 @@ import styles from './styles.module.css';
 import VectorMapV2 from '../VectorMapV2';
 import { getEstaciones } from '@/services';
 import { IngresoEstacionValues } from '@/utils/interfaces';
-import { StayPrimaryLandscapeSharp } from '@mui/icons-material';
 
 const DashCards = () => {
+
+  const [selectedValue, setSelectedValue] = useState('');
+  const [estaciones, setEstaciones] = useState([{
+    id: '',
+    user: '',
+    description: {
+      value: '',
+      metadata: {}
+    },
+    location: [
+      0,
+      0
+    ],
+    sensors: [
+      {
+        station_id: '',
+        description: {
+          value: '',
+          metadata: {}
+        },
+        id: ''
+      },
+      {
+        station_id: '',
+        description: {
+          value: '',
+          metadata: {}
+        },
+        id: ''
+      }
+    ],
+    stationState: '',
+    dateCreated: '',
+    dateModified: ''
+  }]);
+
+  /* llama al get estaciones apenas se renderiza la pantalla */
+  useEffect(() => {
+    getEstaciones()
+      .then(response => {
+        setEstaciones(response);
+        console.log('estaciones response', estaciones);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }, []);
+
   const testCards = [
     {
       title: 'Visitors',
@@ -38,30 +85,11 @@ const DashCards = () => {
       percentage: '-32%',
       positive: false
     },
-  ]
+  ];
 
-  const [estaciones, setEstaciones] = useState<IngresoEstacionValues[]>([]);
-
-  /* llama al get estaciones apenas se renderiza la pantalla */
-  useEffect(() => {
-    getEstaciones()
-      .then(response => {
-        setEstaciones(response);
-        console.log('estaciones response', estaciones);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  }, []);
-
-  const [id, setId] = useState('');
-  const handleChange = (event: SelectChangeEvent) => {
-    setId(event.target.value);
-    console.log('estaciones response', estaciones);
-    console.log('COORDENADAS', coordenadasNumber);
+  const handleChange = (event: { target: { value: any; }; }) => {
+    setSelectedValue(event.target.value);
   };
-
-  const coordenadasNumber = estaciones[6]?.location.coordinates.map(str => parseFloat(str));
 
   return (
     <>
@@ -69,9 +97,9 @@ const DashCards = () => {
         <Typography textAlign={'center'} paddingLeft={2} paddingY={2} paddingBottom={0} color={'white'} variant='h5'>Selecciona tu estación</Typography>
         <Grid item lg={12} paddingLeft={2} paddingY={2}>
           <Select fullWidth className={styles.boxShadowCss} sx={{ backgroundColor: 'rgb(12, 52, 110)', color: 'white' }}
-            value={id}
-            onChange={handleChange}
             label="id"
+            value={selectedValue}
+            onChange={handleChange}
           >
             {estaciones.map((item, i) => (
               <MenuItem value={item.id} key={i}>{item.id}</MenuItem>
