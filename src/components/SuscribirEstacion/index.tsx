@@ -2,30 +2,41 @@ import React, { useEffect, useState } from "react";
 import { Grid, TextField, Button, Typography, Box, Stepper, Step, StepLabel, Tooltip, Zoom, Accordion, AccordionSummary, AccordionDetails, Chip, CircularProgress } from '@mui/material'
 import { ExpandMore } from '@mui/icons-material'
 import styles from './styles.module.css';
-import { postEstacion } from "@/services";
+import { getEstacion, postEstacion, postSensor } from "@/services";
 import { IngresoEstacionValues } from "@/utils/interfaces";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
-import { putEstacion } from "@/services";
 import Router from "next/router";
 
 const SuscribirEstacion = () => {
+  const [isButtonDisable, setIsButtonDisable] = useState(true);
+  const [ingresoOk, setIngresoOk] = useState(false);
+  const [stationInputDisable, setStationInputDisable] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [stationId, setStationId] = useState('');
 
-  /*  objeto como tiene que ser enviado al back (a modo de prueba, ponerlo como lo pide el back)  */
-  const [ingresoSensor, setIngresoSensor] = useState({
+
+  /* Información del sensor */
+  const [sensorData, setSensorData] = useState({
+    station_id: stationId,
     description: {
       value: '',
-      metadata: {},
-    },
-    station_id: {
-      value: '',
-      metadata: '',
+      metadata: {
+        unit: {
+          value: ''
+        },
+        averageTemperature: {
+          value: 0
+        },
+        minTemperature: {
+          value: 0
+        }
+      }
     }
-  })
+  });
 
-  /* objeto como tiene que ser enviado al back (el atributo estado está a modo de prueba) */
+  /* Información de la estación */
   const [ingresoEstacion, setIngresoEstacion] = useState<IngresoEstacionValues>({
-    id: '',
     description: {
       metadata: {},
       value: '',
@@ -35,16 +46,69 @@ const SuscribirEstacion = () => {
       metadata: {},
     },
     user: {
-      value: 'user_15'
+      value: 'Juancito'
     },
-    estado: {
-      value: 'RECHAZADO'
-    }
-  })
-  const [isButtonDisable, setIsButtonDisable] = useState(true);
-  const [ingresoOk, setIngresoOk] = useState(false);
-  const [stationInputDisable, setStationInputDisable] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  });
+
+  /* Informaciòn del resumen de la estaciòn */
+  const [resumenEstacion, setResumenEstacion] = useState({
+    id: "",
+    user: "",
+    description: {
+      value: "",
+      metadata: {}
+    },
+    location: [
+      0,
+      0
+    ],
+    sensors: [
+      {
+        station_id: "",
+        description: {
+          value: "",
+          metadata: {
+            unit: {
+              value: ""
+            },
+            averageTemperature: {
+              value: 0
+            },
+            minTemperature: {
+              value: 0
+            }
+          }
+        },
+        id: ""
+      }
+    ],
+    stationState: "",
+    dateCreated: "",
+    dateModified: ""
+  });
+
+  /* Guarda correctamente la stationID en el sensor luego de crear la estación */
+
+  useEffect(() => {
+    const data = {
+      station_id: stationId,
+      description: {
+        value: "",
+        metadata: {
+          unit: {
+            value: ""
+          },
+          averageTemperature: {
+            value: 0
+          },
+          minTemperature: {
+            value: 0
+          }
+        }
+      }
+    };
+    setSensorData(data);
+  }, [stationId]);
 
   /* Validates if the required fields are filled  */
 
@@ -56,17 +120,10 @@ const SuscribirEstacion = () => {
     }
   }, [ingresoEstacion.description.value, ingresoEstacion.location.coordinates])
 
-  /* Both handles takes care of filling the attributes of each object */
+  /* the handle takes care of filling the attributes of for the station object */
 
   const handleChange = (fieldName: any, value: any) => {
     setIngresoEstacion(prevState => ({
-      ...prevState,
-      [fieldName]: value,
-    }));
-  };
-
-  const handleChangeSensor = (fieldName: any, value: any) => {
-    setIngresoSensor(prevState => ({
       ...prevState,
       [fieldName]: value,
     }));
@@ -93,6 +150,18 @@ const SuscribirEstacion = () => {
       newSkipped.delete(activeStep);
     }
 
+    if (activeStep === 1) {
+      getEstacion(stationId)
+        .then(response => {
+          setResumenEstacion(response);
+          setIsLoading(false);
+          console.log('estaciones response', resumenEstacion);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
+
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     setSkipped(newSkipped);
   };
@@ -107,6 +176,16 @@ const SuscribirEstacion = () => {
       // it should never occur unless someone's actively trying to break something.
       throw new Error("You can't skip a step that isn't optional.");
     }
+
+    getEstacion(stationId)
+      .then(response => {
+        setResumenEstacion(response);
+        setIsLoading(false);
+        console.log('estaciones response', resumenEstacion);
+      })
+      .catch(error => {
+        console.log(error);
+      });
 
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     setSkipped((prevSkipped) => {
@@ -146,56 +225,37 @@ const SuscribirEstacion = () => {
     },
   ];
 
-  /* igual que el anterior pero para los sensores (a modo de prueba, ponerlo como lo pide el back) */
+  /* the input constructor for the TextField component for the resumenFields */
 
-  const ingresoSensorFields = [
-    {
-      label: 'Tipo de sensor',
-      stateKey: 'description',
-      value: ingresoSensor.description.value,
-      handleChangeSensor: (value: any) => handleChangeSensor('description', { value, metadata: {} }),
-    },
-    {
-      label: 'Estación',
-      stateKey: 'station_id',
-      value: ingresoSensor.station_id.value,
-      handleChangeSensor: (value: any) => handleChangeSensor('station_id', { value, metadata: {} }),
-    },
-  ]
-
-  /* the input constructor for the TextField component for the resumenFields (mockeado, acá se podría llamar al getEstacion 
-  recientemente creada y completar todo el "resumen" con esos datos) */
-
-  const resumenFields = [
+  const resumenEstacionFields = [
     {
       label: 'Nombre',
-      value: 'xxxxx'
-    },
-    {
-      label: 'Apellido',
-      value: 'xxxxx'
-    },
-    {
-      label: 'Email',
-      value: 'xxxxx'
-    },
-    {
-      label: 'Descripción',
-      value: 'xxxxx'
+      value: resumenEstacion.user
     },
     {
       label: 'Coordenadas/Locación',
-      value: 'xxxxx',
+      value: resumenEstacion.location,
     },
     {
-      label: 'Tipo de sensor',
-      value: 'xxxxx',
+      label: 'Fecha de creación',
+      value: resumenEstacion.dateCreated,
+    },
+  ];
+
+  const resumenSensorFields = [
+    {
+      label: 'Nombre',
+      value: resumenEstacion.user
     },
     {
-      label: 'Estación N°',
-      value: 'xxxxx',
+      label: 'Coordenadas/Locación',
+      value: resumenEstacion.location,
     },
-  ]
+    {
+      label: 'Fecha de creación',
+      value: resumenEstacion.dateCreated,
+    },
+  ];
 
   /* This function is in charge of sending the body of the station object to make a post request  */
   /* Also handles the Toast popUp */
@@ -208,7 +268,6 @@ const SuscribirEstacion = () => {
             const resultado = await postEstacion(ingresoEstacion);
             /* resetea el objeto */
             setIngresoEstacion({
-              id: '',
               description: {
                 metadata: {},
                 value: '',
@@ -220,26 +279,25 @@ const SuscribirEstacion = () => {
               user: {
                 value: ''
               },
-              estado: {
-                value: ''
-              }
             });
             setIngresoOk(true);
             resolve(resultado)
+            setStationId(resultado.id)
             console.log(resultado, "post correcto");
           } catch (error) {
             console.error(error);
             reject(error)
           }
         } else {
-          /* si es el segundo step hace el put (o lo que necesite para el sensor) */
+          /* si es el segundo step hace el post del sensor */
           try {
-            const resultado = await putEstacion(ingresoSensor.station_id.value, ingresoSensor);
+            const resultado = await postSensor(sensorData);
             setIngresoOk(true);
             resolve(resultado)
-            console.log(resultado, "put correcto");
+            console.log(resultado, "post sensor correcto");
           } catch (error) {
             console.error(error);
+            console.log('el id', stationId)
             reject(error)
           }
         }
@@ -266,14 +324,7 @@ const SuscribirEstacion = () => {
   return (
     <>
       <Box paddingTop={5}>
-        <Grid item lg={10} display={'flex'} flexDirection={'column'} padding={5}
-          sx={{
-            backgroundColor: 'rgb(35, 48, 68)',
-            margin: '0 auto',
-            borderRadius: '12px',
-            boxShadow: '2px 3px 6px 0px #000'
-          }}
-        >
+        <Grid item lg={10} display={'flex'} flexDirection={'column'} padding={5} className={styles.mainGridContainer}>
           <Stepper activeStep={activeStep}>
             {steps.map((label, index) => {
               const stepProps: { completed?: boolean } = {};
@@ -356,24 +407,73 @@ const SuscribirEstacion = () => {
                 <Grid container className={styles.inputsContainer}>
                   <Typography textAlign={'center'} variant="h4" paddingTop={4} color={'white'}>Ingrese un sensor (Opcional)</Typography>
                   <Grid display={'flex'} justifyContent={'center'} container rowSpacing={2} paddingTop={6}>
-                    {ingresoSensorFields.map((field, index) => (
-                      <TextField
-                        key={index}
-                        type="text"
-                        label={field.label}
-                        value={field.value}
-                        onChange={e => field.handleChangeSensor(e.target.value)}
-                        sx={{
-                          '& .MuiOutlinedInput-notchedOutline': {
-                            borderColor: 'rgba(255, 255, 255, 0.63)',
-                          },
-                          '& .MuiInputLabel-root': {
-                            color: 'rgba(255, 255, 255, 0.63)',
-                          },
-                          margin: '12px'
-                        }}
-                      />
-                    ))}
+                    <TextField
+                      label="Descripción"
+                      value={sensorData.description.value}
+                      onChange={(event) =>
+                        setSensorData({
+                          ...sensorData,
+                          description: {
+                            ...sensorData.description,
+                            value: event.target.value
+                          }
+                        })
+                      }
+                    />
+                    <TextField
+                      label="Unidad"
+                      value={sensorData.description.metadata.unit.value}
+                      onChange={(event) =>
+                        setSensorData({
+                          ...sensorData,
+                          description: {
+                            ...sensorData.description,
+                            metadata: {
+                              ...sensorData.description.metadata,
+                              unit: {
+                                value: event.target.value
+                              }
+                            }
+                          }
+                        })
+                      }
+                    />
+                    <TextField
+                      label="Temperatura promedio"
+                      value={sensorData.description.metadata.averageTemperature.value}
+                      onChange={(event) =>
+                        setSensorData({
+                          ...sensorData,
+                          description: {
+                            ...sensorData.description,
+                            metadata: {
+                              ...sensorData.description.metadata,
+                              averageTemperature: {
+                                value: parseInt(event.target.value)
+                              }
+                            }
+                          }
+                        })
+                      }
+                    />
+                    <TextField
+                      label="Temperatura mínima"
+                      value={sensorData.description.metadata.minTemperature.value}
+                      onChange={(event) =>
+                        setSensorData({
+                          ...sensorData,
+                          description: {
+                            ...sensorData.description,
+                            metadata: {
+                              ...sensorData.description.metadata,
+                              minTemperature: {
+                                value: parseInt(event.target.value)
+                              }
+                            }
+                          }
+                        })
+                      }
+                    />
                   </Grid>
                   <Grid paddingTop={3}>
                     <Button size="large" onClick={notify} /* disabled={isButtonDisable} */ variant="contained" className={styles.loadingButtonStatic}>
@@ -384,8 +484,8 @@ const SuscribirEstacion = () => {
               ) :
                 <Grid container className={styles.inputsContainer}>
                   <Grid display={'flex'} justifyContent={'center'} container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 4 }} padding={8}>
-                    <Typography variant="h4" color={'rgba(255, 255, 255, 0.63)'} paddingBottom={4}>Resumen de la nueva estación creada.</Typography>
-                    <Accordion style={{ backgroundColor: 'rgb(35, 48, 68)', boxShadow: '2px 3px 6px 0px #000', padding: '12px' }}>
+                    <Typography variant="h4" color={'rgba(255, 255, 255, 0.63)'} paddingBottom={4}>Resumen de la estación creada.</Typography>
+                    <Accordion style={{ backgroundColor: 'rgb(12, 52, 110)', boxShadow: '2px 3px 6px 0px #000', padding: '12px' }}>
                       <AccordionSummary
                         expandIcon={<ExpandMore color="info" />}
                         aria-controls="panel1a-content"
@@ -393,18 +493,38 @@ const SuscribirEstacion = () => {
                       >
                         <Grid container justifyContent={"space-between"}>
                           <Grid item display={'flex'} alignItems={'center'}>
-                            <Typography color={'rgba(255, 255, 255, 0.63)'} variant='h5'>Estación N°15</Typography>
+                            <Typography color={'rgba(255, 255, 255, 0.63)'} variant='h5'>{resumenEstacion.id}</Typography>
                           </Grid>
-                          <Tooltip title={'Un administrador estara revisando y aprobando esta estación.'} placement="top" arrow TransitionComponent={Zoom}>
+                          <Tooltip title={'Un administrador estará revisando y aprobando esta estación.'} placement="top" arrow TransitionComponent={Zoom}>
                             <Grid item paddingRight={1}>
-                              <Chip label="Pendiente de aprobación" sx={{ backgroundColor: '#BBB000', fontWeight: 'bold', fontSize: '14px' }} />
+                              <Chip label={resumenEstacion.stationState === "IN_APPROVAL" ? 'Pendiente de aprobación' : ''} sx={{ backgroundColor: '#BBB000', fontWeight: 'bold', fontSize: '14px' }} />
                             </Grid>
                           </Tooltip>
                         </Grid>
                       </AccordionSummary>
                       <AccordionDetails>
+                        <Typography textAlign={'center'} variant="h5" color={'white'} pb={2}>Estación</Typography>
                         <Grid display={'flex'} justifyContent={'center'} container>
-                          {resumenFields.map((item, i) => (
+                          {resumenEstacionFields.map((item, i) => (
+                            <TextField key={i} label={item.label} value={item.value}
+                              sx={{
+                                '& .MuiOutlinedInput-notchedOutline': {
+                                  borderColor: 'rgba(255, 255, 255, 0.63)',
+                                },
+                                '& .MuiInputLabel-root': {
+                                  color: 'rgba(255, 255, 255, 0.63)',
+                                },
+                                '& .MuiOutlinedInput-input': {
+                                  color: 'rgba(255, 255, 255, 0.63)',
+                                },
+                                margin: '12px'
+                              }}
+                            />
+                          ))}
+                        </Grid>
+                        <Typography textAlign={'center'} variant="h5" color={'white'} py={2}>Sensor</Typography>
+                        <Grid display={'flex'} justifyContent={'center'} container>
+                          {resumenSensorFields.map((item, i) => (
                             <TextField key={i} label={item.label} value={item.value}
                               sx={{
                                 '& .MuiOutlinedInput-notchedOutline': {

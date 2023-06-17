@@ -26,3 +26,15 @@
   transition: ease-in-out 0.7s;
   background-color: #d32f2f;
 }
+
+.mainGridContainer {
+  background-color: rgb(12, 52, 110);
+  margin: 0 auto;
+  border-radius: 12px;
+  box-shadow: 2px 3px 6px 1px #000;
+}
+
+.mainGridContainer:hover {
+  box-shadow: 3px 3px 8px 3px #000;
+  transition: ease-in-out 0.2s;
+}

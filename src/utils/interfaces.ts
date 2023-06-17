@@ -1,5 +1,4 @@
 export interface IngresoEstacionValues {
-  id: string;
   description: {
     value: string;
     metadata: object;
@@ -9,9 +8,6 @@ export interface IngresoEstacionValues {
     metadata: object;
   };
   user: {
-    value: string;
-  };
-  estado: {
     value: string;
   };
 }

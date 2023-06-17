@@ -1,6 +1,11 @@
 .cardsBgc {
-  background-color: rgb(35, 48, 68);
+  background-color: rgb(12, 52, 110);
   box-shadow: 2px 3px 6px 0px #000;
+}
+
+.cardsBgc:hover {
+  box-shadow: 3px 3px 8px 3px #000;
+  transition: ease-in-out 0.15s;
 }
 
 .percentageNegative {
@@ -21,4 +26,9 @@
 
 .boxShadowCss {
   box-shadow: 2px 3px 6px 0px #000;
+}
+
+.boxShadowCss:hover {
+  box-shadow: 3px 3px 8px 3px #000;
+  transition: ease-in-out 0.15s;
 }

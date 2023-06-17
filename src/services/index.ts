@@ -10,9 +10,7 @@ export const getEstaciones = async () => {
 };
 
 export const getEstacion = async (id: string) => {
-  const { data } = await axios.get(
-    `https://646faee909ff19b12087a570.mockapi.io/postEstacion/${id}`
-  );
+  const { data } = await axios.get(`http://localhost:3000/stations/${id}`);
   return data;
 };
 
@@ -20,15 +18,7 @@ export const getEstacion = async (id: string) => {
 
 export const postEstacion = async (estacion: any) => {
   const { data } = await axios.post(
-    "https://646faee909ff19b12087a570.mockapi.io/postEstacion",
-    estacion
-  );
-  return data;
-};
-
-export const putEstacion = async (id: string, estacion: any) => {
-  const { data } = await axios.put(
-    `https://646faee909ff19b12087a570.mockapi.io/postEstacion/${id}`,
+    "http://localhost:3000/stations/",
     estacion
   );
   return data;
@@ -36,5 +26,12 @@ export const putEstacion = async (id: string, estacion: any) => {
 
 export const deleteEstacion = async (id: string) => {
   const { data } = await axios.delete(`http://localhost:3000/estaciones/${id}`);
+  return data;
+};
+
+/* SENSORES */
+
+export const postSensor = async (sensor: any) => {
+  const { data } = await axios.post("http://localhost:3000/sensors/", sensor);
   return data;
 };

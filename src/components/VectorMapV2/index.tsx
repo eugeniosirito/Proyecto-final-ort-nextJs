@@ -11,7 +11,7 @@ const VectorMapV2 = () => {
   return (
     <VectorMap
       map={arMill} // Utiliza el mapa deseado, por ejemplo 'arMill' para el mapa de Argentina
-      backgroundColor="rgb(35, 48, 68)" // color del fondo
+      backgroundColor="rgb(12, 52, 110)" // color del fondo
       markerStyle={{
         //color del marcador
         initial: {

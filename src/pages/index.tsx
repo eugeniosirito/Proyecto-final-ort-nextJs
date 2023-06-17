@@ -23,7 +23,7 @@ export default function Home() {
           xs={3}
           display={"flex"}
           flexDirection={"column"}
-          sx={{ backgroundColor: "rgb(35, 48, 68)", height: "100vh" }}
+          sx={{ backgroundColor: "rgb(22, 48, 88)", height: "100vh", boxShadow: '2px 3px 6px 0px #000' }}
           className={styles.sideMenuContainer}
         >
           <SideMenu setStartProgress={setStartProgress} />

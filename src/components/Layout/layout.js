@@ -19,8 +19,9 @@ export default function Layout({ children, setStartProgress }) {
           display={"flex"}
           flexDirection={"column"}
           sx={{
-            backgroundColor: "rgb(35, 48, 68)",
+            backgroundColor: "rgb(12, 52, 110)",
             height: "100vh",
+            boxShadow: "2px 3px 6px 0px #000",
           }}
           className={styles.sideMenuContainer}
         >
