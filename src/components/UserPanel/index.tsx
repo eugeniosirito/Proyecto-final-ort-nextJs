@@ -11,10 +11,9 @@ import SensorSummaryModal from './components/SensorSummaryModal';
 import CreateSensorModal from './components/CreateSensorModal';
 import 'react-toastify/dist/ReactToastify.css'
 import { dateFormatted } from '../../utils/dateFormatted'
-
+import { deleteSensorOnClick, editarEstacion } from './utils';
 
 const UserPanel = () => {
-
   const router = useRouter();
   const [eliminarActivo, setEliminarActivo] = useState(false);
   const [sensorWarningActivo, setSensorWarningActivo] = useState(false);
@@ -22,7 +21,6 @@ const UserPanel = () => {
   const [createSensorModalActivo, setCreateSensorModalActivo] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [estacionID, setEstacionID] = useState('');
-  const [sensorID, setSensorID] = useState('');
   const [isEditando, setIsEditando] = useState(false);
   const [estaciones, setEstaciones] = useState([{
     id: '',
@@ -83,31 +81,6 @@ const UserPanel = () => {
       });
   }, []);
 
-  const deleteSensorOnClick = (sensorId: string) => {
-    const returnDeletePromise = () => {
-      return new Promise(async (resolve, reject) => {
-        try {
-          const resultado = await deleteSensor(sensorId);
-          resolve(resultado)
-          router.reload();
-          console.log('DELETE CORRECTO', resultado);
-        } catch (error) {
-          console.log(error);
-          reject(error);
-        }
-      })
-    }
-
-    toast.promise(
-      returnDeletePromise,
-      {
-        pending: 'Borrando sensor',
-        success: 'Sensor borrado exitosamente 👌',
-        error: 'Ha occurido un error, vuelva a intentar mas tarde 🤯'
-      }
-    )
-  };
-
   const eliminarEstacion = (idEstacion: string) => {
     const returnDeletePromise = () => {
       return new Promise(async (resolve, reject) => {
@@ -136,61 +109,6 @@ const UserPanel = () => {
     )
   };
 
-  const editarEstacion = (idEstacion: string, estacionEdit: any) => {
-    const returnDeletePromise = () => {
-      return new Promise(async (resolve, reject) => {
-        try {
-          const resultado = await patchEstacion(idEstacion, estacionEdit);
-          resolve(resultado)
-          console.log('editado correctamente', resultado);
-        } catch (error) {
-          console.log(error);
-          reject(error);
-        }
-      })
-    }
-
-    toast.promise(
-      returnDeletePromise,
-      {
-        pending: 'Editando',
-        success: 'Sensor editado exitosamente 👌',
-        error: 'Ha occurido un error, vuelva a intentar mas tarde 🤯'
-      }
-    )
-  };
-
-  const resumenEstacionFields = [
-    {
-      label: 'Nombre',
-      value: 'xxxxx'
-    },
-    {
-      label: 'Apellido',
-      value: 'xxxxx'
-    },
-    {
-      label: 'Email',
-      value: 'xxxxx'
-    },
-    {
-      label: 'Descripción',
-      value: 'xxxxx'
-    },
-    {
-      label: 'Coordenadas/Locación',
-      value: 'xxxxx',
-    },
-    {
-      label: 'Tipo de sensor',
-      value: 'xxxxx',
-    },
-    {
-      label: 'Estación N°',
-      value: 'xxxxx',
-    },
-  ];
-
   const resumenSensorFields = [
     {
       label: 'ID',
@@ -213,10 +131,6 @@ const UserPanel = () => {
       value: sensorEdit?.dateModified
     },
   ];
-
-  const handleClickOpenEliminar = () => {
-    setEliminarActivo(true);
-  };
 
   const handleCloseEliminar = () => {
     setEliminarActivo(false);
@@ -272,6 +186,25 @@ const UserPanel = () => {
     },
   ];
 
+  const renderTextField = (label: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactFragment | React.ReactPortal | null | undefined, value: unknown) => (
+    <TextField
+      label={label}
+      value={value}
+      sx={{
+        '& .MuiOutlinedInput-notchedOutline': {
+          borderColor: 'rgba(255, 255, 255, 0.63)',
+        },
+        '& .MuiInputLabel-root': {
+          color: 'rgba(255, 255, 255, 0.63)',
+        },
+        '& .MuiOutlinedInput-input': {
+          color: 'rgba(255, 255, 255, 0.63)',
+        },
+        margin: '12px',
+      }}
+    />
+  );
+
 
   return (
     <>
@@ -318,90 +251,13 @@ const UserPanel = () => {
                     <AccordionDetails>
                       {!isEditando ? (
                         <Grid display={'flex'} justifyContent={'center'} container>
-                          <TextField label={'Id estacion'} value={item.id}
-                            sx={{
-                              '& .MuiOutlinedInput-notchedOutline': {
-                                borderColor: 'rgba(255, 255, 255, 0.63)',
-                              },
-                              '& .MuiInputLabel-root': {
-                                color: 'rgba(255, 255, 255, 0.63)',
-                              },
-                              '& .MuiOutlinedInput-input': {
-                                color: 'rgba(255, 255, 255, 0.63)',
-                              },
-                              margin: '12px'
-                            }}
-                          />
-                          <TextField label={'Usuario'} value={item.user}
-                            sx={{
-                              '& .MuiOutlinedInput-notchedOutline': {
-                                borderColor: 'rgba(255, 255, 255, 0.63)',
-                              },
-                              '& .MuiInputLabel-root': {
-                                color: 'rgba(255, 255, 255, 0.63)',
-                              },
-                              '& .MuiOutlinedInput-input': {
-                                color: 'rgba(255, 255, 255, 0.63)',
-                              },
-                              margin: '12px'
-                            }}
-                          />
-                          <TextField label={'Locación'} value={item.location}
-                            sx={{
-                              '& .MuiOutlinedInput-notchedOutline': {
-                                borderColor: 'rgba(255, 255, 255, 0.63)',
-                              },
-                              '& .MuiInputLabel-root': {
-                                color: 'rgba(255, 255, 255, 0.63)',
-                              },
-                              '& .MuiOutlinedInput-input': {
-                                color: 'rgba(255, 255, 255, 0.63)',
-                              },
-                              margin: '12px'
-                            }}
-                          />
-                          <TextField label={'Fecha de creación'} value={dateFormatted(item.dateCreated)}
-                            sx={{
-                              '& .MuiOutlinedInput-notchedOutline': {
-                                borderColor: 'rgba(255, 255, 255, 0.63)',
-                              },
-                              '& .MuiInputLabel-root': {
-                                color: 'rgba(255, 255, 255, 0.63)',
-                              },
-                              '& .MuiOutlinedInput-input': {
-                                color: 'rgba(255, 255, 255, 0.63)',
-                              },
-                              margin: '12px'
-                            }}
-                          />
-                          <TextField label={'Fecha de modificación'} value={dateFormatted(item.dateModified)}
-                            sx={{
-                              '& .MuiOutlinedInput-notchedOutline': {
-                                borderColor: 'rgba(255, 255, 255, 0.63)',
-                              },
-                              '& .MuiInputLabel-root': {
-                                color: 'rgba(255, 255, 255, 0.63)',
-                              },
-                              '& .MuiOutlinedInput-input': {
-                                color: 'rgba(255, 255, 255, 0.63)',
-                              },
-                              margin: '12px'
-                            }}
-                          />
-                          <TextField label={'Estado'} value={item.stationState}
-                            sx={{
-                              '& .MuiOutlinedInput-notchedOutline': {
-                                borderColor: 'rgba(255, 255, 255, 0.63)',
-                              },
-                              '& .MuiInputLabel-root': {
-                                color: 'rgba(255, 255, 255, 0.63)',
-                              },
-                              '& .MuiOutlinedInput-input': {
-                                color: 'rgba(255, 255, 255, 0.63)',
-                              },
-                              margin: '12px'
-                            }}
-                          />
+                          {renderTextField('Id estacion', item.id)}
+                          {renderTextField('Descripción', item.description.value)}
+                          {renderTextField('Usuario', item.user)}
+                          {renderTextField('Locación', item.location)}
+                          {renderTextField('Fecha de creación', dateFormatted(item.dateCreated))}
+                          {renderTextField('Fecha de modificación', dateFormatted(item.dateModified))}
+                          {renderTextField('Estado', item.stationState)}
                         </Grid>
                       ) : (
                         <>
@@ -453,7 +309,7 @@ const UserPanel = () => {
                               setSensorEdit(item);
                               console.log('test', sensorEdit)
                             } else {
-                              handleOpenModalCreateSensor();
+                              setCreateSensorModalActivo(true);
                               setEstacionID(item.id)
                               console.log(item.id)
                             }
@@ -464,7 +320,7 @@ const UserPanel = () => {
                           Editar
                         </Button>
                         <Button size="large" variant="contained" className={styles.errorButton} onClick={() => {
-                          handleClickOpenEliminar(),
+                          setEliminarActivo(true),
                             setEstacionID(item.id)
                         }}>
                           Eliminar
