@@ -7,7 +7,6 @@ import { IngresoEstacionValues } from "@/utils/interfaces";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
 import Router from "next/router";
-import { ToastContainer, Slide } from 'react-toastify';
 
 const SuscribirEstacion = () => {
   const [isButtonDisable, setIsButtonDisable] = useState(true);

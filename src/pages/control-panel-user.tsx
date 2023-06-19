@@ -15,21 +15,19 @@ export default function AddStation() {
         <div className='page-animation'>
           <UserPanel />
         </div>
-        <Grid>
-          <ToastContainer
-            transition={Slide}
-            position="bottom-left"
-            autoClose={5000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="colored"
-          />
-        </Grid>
+        <ToastContainer
+          transition={Slide}
+          position="bottom-left"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+        />
       </Layout>
     </>
   )

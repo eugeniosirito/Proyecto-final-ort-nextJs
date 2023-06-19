@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField, Typography } from '@mui/material';
 import styles from '../styles.module.css';
 import { toast } from 'react-toastify';
@@ -7,11 +7,11 @@ import { postSensor } from '@/services';
 const CreateSensorModal = ({
   createSensorModalActivo,
   handleCloseModalCreateSensor,
-  stationId
+  idstation
 }: any) => {
 
   const [sensorData, setSensorData] = useState({
-    station_id: stationId,
+    station_id: '',
     description: {
       value: '',
       metadata: {
@@ -28,12 +28,20 @@ const CreateSensorModal = ({
     }
   });
 
+  useEffect(() => {
+    setSensorData(prevSensorData => ({
+      ...prevSensorData,
+      station_id: idstation
+    }));
+  }, [idstation]);
+
   const crearEstacion = () => {
     const returnCrearPromise = () => {
       return new Promise(async (resolve, reject) => {
         try {
           const resultado = await postSensor(sensorData);
           resolve(resultado)
+          handleCloseModalCreateSensor()
           console.log('sensor creado correctamente', resultado);
         } catch (error) {
           console.log(error);
@@ -45,8 +53,8 @@ const CreateSensorModal = ({
     toast.promise(
       returnCrearPromise,
       {
-        pending: 'Borrando estación',
-        success: 'Borrada correctamente 👌',
+        pending: 'Creado sensor',
+        success: 'Sensor creado correctamente 👌',
         error: 'Ha occurido un error, vuelva a intentar mas tarde 🤯'
       }
     )
@@ -141,7 +149,7 @@ const CreateSensorModal = ({
           </Button>
           <Button className={styles.successButton}
             variant="contained"
-            onClick={crearEstacion}
+            onClick={() => { crearEstacion() }}
           >
             Crear
           </Button>

@@ -9,7 +9,7 @@ const SensorSummaryModal = ({
   resumenSensorFields,
   handleCloseSensorSummary,
   deleteSensorOnClick,
-  sensorSeleccionado
+  sensorEdit
 }: any) => {
   return (
     <>
@@ -46,7 +46,7 @@ const SensorSummaryModal = ({
           </Button>
           <Button className={styles.errorButton}
             variant="contained"
-            onClick={() => { handleCloseSensorSummary(), deleteSensorOnClick(sensorSeleccionado.id) }}
+            onClick={() => { handleCloseSensorSummary(), deleteSensorOnClick(sensorEdit.sensors[0].id) }}
           >
             Eliminar
           </Button>

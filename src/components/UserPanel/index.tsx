@@ -9,8 +9,12 @@ import { toast } from 'react-toastify';
 import DeleteStationModal from './components/DeleteStationModal';
 import SensorSummaryModal from './components/SensorSummaryModal';
 import CreateSensorModal from './components/CreateSensorModal';
+import 'react-toastify/dist/ReactToastify.css'
+import { dateFormatted } from '../../utils/dateFormatted'
+
 
 const UserPanel = () => {
+
   const router = useRouter();
   const [eliminarActivo, setEliminarActivo] = useState(false);
   const [sensorWarningActivo, setSensorWarningActivo] = useState(false);
@@ -18,6 +22,7 @@ const UserPanel = () => {
   const [createSensorModalActivo, setCreateSensorModalActivo] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [estacionID, setEstacionID] = useState('');
+  const [sensorID, setSensorID] = useState('');
   const [isEditando, setIsEditando] = useState(false);
   const [estaciones, setEstaciones] = useState([{
     id: '',
@@ -52,32 +57,6 @@ const UserPanel = () => {
     dateCreated: '',
     dateModified: ''
   }]);
-  const [sensorSeleccionado, setSensorSeleccionado] = useState({
-    id: '',
-    description: {
-      value: '',
-      metadata: {
-        air_quality_index: 0,
-        humidity: 0,
-        maxMeasurement: 0,
-        minMeasurement: 0,
-        pollutants: {
-          co2: 0,
-          co: 0,
-          no2: 0,
-          o3: 0,
-          so2: 0,
-          pm2: 0,
-          pm10: 0
-        },
-        pressure: 0,
-        temperature: 0
-      }
-    },
-    station_id: '',
-    dateCreated: '',
-    dateModified: ''
-  })
   const [estacionEdit, setEstacionEdit] = useState({
     description: {
       metadata: {},
@@ -90,19 +69,7 @@ const UserPanel = () => {
       value: 'JUANPEPE'
     },
   });
-
-  const [estacionEditt, setEstacionEditt] = useState({
-    description: {
-      metadata: {},
-      value: 'AAA'
-    },
-    location: {
-      coordinates: [parseFloat(''), parseFloat('')]
-    },
-    user: {
-      value: 'Miguel'
-    }
-  });
+  const [sensorEdit, setSensorEdit] = useState({});
 
   useEffect(() => {
     getEstaciones()
@@ -117,26 +84,28 @@ const UserPanel = () => {
   }, []);
 
   const deleteSensorOnClick = (sensorId: string) => {
-    deleteSensor(sensorId)
-      .then(response => {
-        setIsLoading(false);
-        console.log('DELETE CORRECTO', response);
+    const returnDeletePromise = () => {
+      return new Promise(async (resolve, reject) => {
+        try {
+          const resultado = await deleteSensor(sensorId);
+          resolve(resultado)
+          router.reload();
+          console.log('DELETE CORRECTO', resultado);
+        } catch (error) {
+          console.log(error);
+          reject(error);
+        }
       })
-      .catch(error => {
-        console.log(error);
-      });
-  };
+    }
 
-  const getSensoresOnClick = (sensorId: string) => {
-    getSensor(sensorId)
-      .then(response => {
-        setSensorSeleccionado(response);
-        setIsLoading(false);
-        console.log('estaciones response', sensorSeleccionado);
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    toast.promise(
+      returnDeletePromise,
+      {
+        pending: 'Borrando sensor',
+        success: 'Sensor borrado exitosamente 👌',
+        error: 'Ha occurido un error, vuelva a intentar mas tarde 🤯'
+      }
+    )
   };
 
   const eliminarEstacion = (idEstacion: string) => {
@@ -184,8 +153,8 @@ const UserPanel = () => {
     toast.promise(
       returnDeletePromise,
       {
-        pending: 'Borrando estación',
-        success: 'Borrada correctamente 👌',
+        pending: 'Editando',
+        success: 'Sensor editado exitosamente 👌',
         error: 'Ha occurido un error, vuelva a intentar mas tarde 🤯'
       }
     )
@@ -225,23 +194,23 @@ const UserPanel = () => {
   const resumenSensorFields = [
     {
       label: 'ID',
-      value: sensorSeleccionado.id
+      value: sensorEdit?.id
     },
     {
       label: 'Descripción',
-      value: sensorSeleccionado.description.value
+      value: sensorEdit?.description?.value
     },
     {
       label: 'Pertenece a',
-      value: sensorSeleccionado.station_id
+      value: sensorEdit?.station_id
     },
     {
       label: 'Fecha de creación',
-      value: sensorSeleccionado.dateCreated
+      value: sensorEdit?.dateCreated
     },
     {
       label: 'Fecha de modificación',
-      value: sensorSeleccionado.dateModified,
+      value: sensorEdit?.dateModified
     },
   ];
 
@@ -315,59 +284,127 @@ const UserPanel = () => {
           </Grid>
         ) : (
           <Grid item lg={12} paddingX={3} paddingTop={3} className='pageAnimation-containers'>
-            {estaciones.map((item, i) => {
-              return (
-                <React.Fragment key={i}>
-                  <>
-                    <Accordion className={styles.accordionContainer}>
-                      <AccordionSummary
-                        expandIcon={<ExpandMore color="info" />}
-                        aria-controls="panel1a-content"
-                        id="panel1a-header"
-                      >
-                        <Grid container justifyContent={"space-between"}>
-                          <Grid display={'flex'} flexDirection={'row'}>
-                            <Grid item display={'flex'} alignItems={'center'} paddingRight={2}>
-                              <Typography color={'rgba(255, 255, 255, 0.63)'} variant='h5'>{`Estación Nro° ${item.id}`}</Typography>
-                            </Grid>
-                            <Grid item display={'flex'} alignItems={'center'}>
-                              <Typography color={'rgba(255, 255, 255, 0.63)'} variant='h5'>{`Usuario: ${item.user}`}</Typography>
-                            </Grid>
+            {estaciones.map((item, indice) => (
+              <>
+                <>
+                  <Accordion className={styles.accordionContainer}>
+                    <AccordionSummary
+                      expandIcon={<ExpandMore color="info" />}
+                      aria-controls="panel1a-content"
+                      id="panel1a-header"
+                    >
+                      <Grid container justifyContent={"space-between"}>
+                        <Grid display={'flex'} flexDirection={'row'}>
+                          <Grid item display={'flex'} alignItems={'center'} paddingRight={2}>
+                            <Typography color={'rgba(255, 255, 255, 0.63)'} variant='h5'>{`Estación Nro° ${item.id}`}</Typography>
                           </Grid>
-                          <Grid item paddingRight={1}>
-                            <Chip
-                              label={item.stationState === 'IN_APPROVAL' ? 'Pendiente de aprobación' : item.stationState === 'ACEPTADO' ? 'Aceptado' : 'Rechazado'}
-                              sx={{ fontWeight: 'bold', fontSize: '14px' }}
-                              className={clsx({
-                                'color-chip-warning': item.stationState === 'IN_APPROVAL',
-                                'color-chip-success': item.stationState === 'ACEPTADO',
-                                'color-chip-error': item.stationState === 'RECHAZADO',
-                              })}
-                            />
+                          <Grid item display={'flex'} alignItems={'center'}>
+                            <Typography color={'rgba(255, 255, 255, 0.63)'} variant='h5'>{`Usuario: ${item.user}`}</Typography>
                           </Grid>
                         </Grid>
-                      </AccordionSummary>
-                      <AccordionDetails>
-                        {!isEditando ? (
-                          <Grid display={'flex'} justifyContent={'center'} container>
-                            {resumenEstacionFields.map((item, i) => (
-                              <TextField key={i} label={item.label} value={item.value}
-                                sx={{
-                                  '& .MuiOutlinedInput-notchedOutline': {
-                                    borderColor: 'rgba(255, 255, 255, 0.63)',
-                                  },
-                                  '& .MuiInputLabel-root': {
-                                    color: 'rgba(255, 255, 255, 0.63)',
-                                  },
-                                  '& .MuiOutlinedInput-input': {
-                                    color: 'rgba(255, 255, 255, 0.63)',
-                                  },
-                                  margin: '12px'
-                                }}
-                              />
-                            ))}
-                          </Grid>
-                        ) : (
+                        <Grid item paddingRight={1}>
+                          <Chip
+                            label={item.stationState === 'IN_APPROVAL' ? 'Pendiente de aprobación' : item.stationState === 'ACEPTADO' ? 'Aceptado' : 'Rechazado'}
+                            sx={{ fontWeight: 'bold', fontSize: '14px' }}
+                            className={clsx({
+                              'color-chip-warning': item.stationState === 'IN_APPROVAL',
+                              'color-chip-success': item.stationState === 'ACEPTADO',
+                              'color-chip-error': item.stationState === 'RECHAZADO',
+                            })}
+                          />
+                        </Grid>
+                      </Grid>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      {!isEditando ? (
+                        <Grid display={'flex'} justifyContent={'center'} container>
+                          <TextField label={'Id estacion'} value={item.id}
+                            sx={{
+                              '& .MuiOutlinedInput-notchedOutline': {
+                                borderColor: 'rgba(255, 255, 255, 0.63)',
+                              },
+                              '& .MuiInputLabel-root': {
+                                color: 'rgba(255, 255, 255, 0.63)',
+                              },
+                              '& .MuiOutlinedInput-input': {
+                                color: 'rgba(255, 255, 255, 0.63)',
+                              },
+                              margin: '12px'
+                            }}
+                          />
+                          <TextField label={'Usuario'} value={item.user}
+                            sx={{
+                              '& .MuiOutlinedInput-notchedOutline': {
+                                borderColor: 'rgba(255, 255, 255, 0.63)',
+                              },
+                              '& .MuiInputLabel-root': {
+                                color: 'rgba(255, 255, 255, 0.63)',
+                              },
+                              '& .MuiOutlinedInput-input': {
+                                color: 'rgba(255, 255, 255, 0.63)',
+                              },
+                              margin: '12px'
+                            }}
+                          />
+                          <TextField label={'Locación'} value={item.location}
+                            sx={{
+                              '& .MuiOutlinedInput-notchedOutline': {
+                                borderColor: 'rgba(255, 255, 255, 0.63)',
+                              },
+                              '& .MuiInputLabel-root': {
+                                color: 'rgba(255, 255, 255, 0.63)',
+                              },
+                              '& .MuiOutlinedInput-input': {
+                                color: 'rgba(255, 255, 255, 0.63)',
+                              },
+                              margin: '12px'
+                            }}
+                          />
+                          <TextField label={'Fecha de creación'} value={dateFormatted(item.dateCreated)}
+                            sx={{
+                              '& .MuiOutlinedInput-notchedOutline': {
+                                borderColor: 'rgba(255, 255, 255, 0.63)',
+                              },
+                              '& .MuiInputLabel-root': {
+                                color: 'rgba(255, 255, 255, 0.63)',
+                              },
+                              '& .MuiOutlinedInput-input': {
+                                color: 'rgba(255, 255, 255, 0.63)',
+                              },
+                              margin: '12px'
+                            }}
+                          />
+                          <TextField label={'Fecha de modificación'} value={dateFormatted(item.dateModified)}
+                            sx={{
+                              '& .MuiOutlinedInput-notchedOutline': {
+                                borderColor: 'rgba(255, 255, 255, 0.63)',
+                              },
+                              '& .MuiInputLabel-root': {
+                                color: 'rgba(255, 255, 255, 0.63)',
+                              },
+                              '& .MuiOutlinedInput-input': {
+                                color: 'rgba(255, 255, 255, 0.63)',
+                              },
+                              margin: '12px'
+                            }}
+                          />
+                          <TextField label={'Estado'} value={item.stationState}
+                            sx={{
+                              '& .MuiOutlinedInput-notchedOutline': {
+                                borderColor: 'rgba(255, 255, 255, 0.63)',
+                              },
+                              '& .MuiInputLabel-root': {
+                                color: 'rgba(255, 255, 255, 0.63)',
+                              },
+                              '& .MuiOutlinedInput-input': {
+                                color: 'rgba(255, 255, 255, 0.63)',
+                              },
+                              margin: '12px'
+                            }}
+                          />
+                        </Grid>
+                      ) : (
+                        <>
                           <Grid container display={'flex'} justifyContent={'center'} className={'pageAnimation-containers'}>
                             <Typography textAlign={'center'} variant="h4" color={'white'}>Ingrese su estación</Typography>
                             <Grid display={'flex'} justifyContent={'center'} container rowSpacing={2} paddingTop={6} >
@@ -404,62 +441,66 @@ const UserPanel = () => {
                               </Button>
                             </Grid>
                           </Grid>
-                        )}
-                      </AccordionDetails>
-                      {!isEditando ? (
-                        <Grid paddingTop={3} display={'flex'} justifyContent={'flex-end'}>
-                          <Button size="large" variant="contained" className={styles.classicButton}
-                            onClick={() => {
-                              if (item.sensors.length > 0) {
-                                handleOpenSensorSummary();
-                                getSensoresOnClick(item.sensors[i]?.id);
-                              } else {
-                                handleOpenModalCreateSensor();
-                              }
-                            }}>
-                            {item.sensors.length > 0 ? 'Ver sensores' : 'Agregar sensor'}
-                          </Button>
-                          <Button size="large" variant="contained" className={styles.warningButton} onClick={() => setIsEditando(true)}>
-                            Editar
-                          </Button>
-                          <Button size="large" variant="contained" className={styles.errorButton} onClick={() => {
-                            handleClickOpenEliminar(),
+                        </>
+                      )}
+                    </AccordionDetails>
+                    {!isEditando ? (
+                      <Grid paddingTop={3} display={'flex'} justifyContent={'flex-end'}>
+                        <Button size="large" variant="contained" className={styles.classicButton}
+                          onClick={() => {
+                            if (item.sensors.length > 0) {
+                              handleOpenSensorSummary();
+                              setSensorEdit(item);
+                              console.log('test', sensorEdit)
+                            } else {
+                              handleOpenModalCreateSensor();
                               setEstacionID(item.id)
+                              console.log(item.id)
+                            }
                           }}>
-                            Eliminar
-                          </Button>
-                        </Grid>
-                      ) : ''}
-                    </Accordion>
-                  </>
-                  <DeleteStationModal
-                    sensorWarningActivo={sensorWarningActivo}
-                    eliminarActivo={eliminarActivo}
-                    handleCloseEliminar={handleCloseEliminar}
-                    eliminarEstacion={eliminarEstacion}
-                    handleCloseSensorModalWarning={handleCloseSensorModalWarning}
-                    handleOpenSensorSummary={handleOpenSensorSummary}
-                    idstation={estacionID}
-                  />
-                  <SensorSummaryModal
-                    sensorModalActivo={sensorModalActivo}
-                    handleCloseEliminar={handleCloseEliminar}
-                    resumenSensorFields={resumenSensorFields}
-                    handleCloseSensorSummary={handleCloseSensorSummary}
-                    deleteSensorOnClick={deleteSensorOnClick}
-                    sensorSeleccionado={sensorSeleccionado}
-                  />
-                  <CreateSensorModal
-                    createSensorModalActivo={createSensorModalActivo}
-                    handleCloseModalCreateSensor={handleCloseModalCreateSensor}
-                    stationId={item.id}
-                  />
-                </React.Fragment>
-              )
-            })}
+                          {item.sensors.length > 0 ? 'Ver sensores' : 'Agregar sensor'}
+                        </Button>
+                        <Button size="large" variant="contained" className={styles.warningButton} onClick={() => setIsEditando(true)}>
+                          Editar
+                        </Button>
+                        <Button size="large" variant="contained" className={styles.errorButton} onClick={() => {
+                          handleClickOpenEliminar(),
+                            setEstacionID(item.id)
+                        }}>
+                          Eliminar
+                        </Button>
+                      </Grid>
+                    ) : ''}
+                  </Accordion>
+                </>
+                <DeleteStationModal
+                  sensorWarningActivo={sensorWarningActivo}
+                  eliminarActivo={eliminarActivo}
+                  handleCloseEliminar={handleCloseEliminar}
+                  eliminarEstacion={eliminarEstacion}
+                  handleCloseSensorModalWarning={handleCloseSensorModalWarning}
+                  handleOpenSensorSummary={handleOpenSensorSummary}
+                  idstation={estacionID}
+                />
+                <SensorSummaryModal
+                  sensorModalActivo={sensorModalActivo}
+                  handleCloseEliminar={handleCloseEliminar}
+                  resumenSensorFields={resumenSensorFields}
+                  handleCloseSensorSummary={handleCloseSensorSummary}
+                  deleteSensorOnClick={deleteSensorOnClick}
+                  sensorEdit={sensorEdit}
+                />
+                <CreateSensorModal
+                  createSensorModalActivo={createSensorModalActivo}
+                  handleCloseModalCreateSensor={handleCloseModalCreateSensor}
+                  idstation={estacionID}
+                />
+              </>
+            ))}
           </Grid>
         )}
       </Grid >
+
     </>
   )
 }
