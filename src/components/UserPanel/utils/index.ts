@@ -8,7 +8,6 @@ export const editarEstacion = (idEstacion: string, estacionEdit: any) => {
       try {
         const resultado = await patchEstacion(idEstacion, estacionEdit);
         resolve(resultado);
-        router.reload();
         console.log("editado correctamente", resultado);
       } catch (error) {
         console.log(error);

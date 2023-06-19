@@ -35,7 +35,7 @@ const CreateSensorModal = ({
     }));
   }, [idstation]);
 
-  const crearEstacion = () => {
+  const crearSensor = () => {
     const returnCrearPromise = () => {
       return new Promise(async (resolve, reject) => {
         try {
@@ -66,12 +66,11 @@ const CreateSensorModal = ({
         open={createSensorModalActivo}
         keepMounted
         onClose={handleCloseModalCreateSensor}
-        aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle color={'white'} textAlign={'center'} style={{ backgroundColor: 'rgb(9, 39, 84)' }}>{"Crear sensor"}</DialogTitle>
+        <DialogTitle color={'white'} textAlign={'center'} style={{ backgroundColor: 'rgb(9, 39, 84)' }}>{"Creación del sensor"}</DialogTitle>
         <DialogContent style={{ backgroundColor: 'rgb(9, 39, 84)' }}>
-          <Grid container className={styles.inputsContainer}>
-            <Typography textAlign={'center'} variant="h4" paddingTop={4} color={'white'}>Ingrese un sensor (Opcional)</Typography>
+          <Grid display={'flex'} justifyContent={'center'} container className={styles.inputsContainer}>
+            <Typography textAlign={'center'} variant="h5" color={'white'}>Complete los campos para crear el sensor</Typography>
             <Grid display={'flex'} justifyContent={'center'} container rowSpacing={2} paddingTop={6}>
               <TextField
                 label="Descripción"
@@ -85,6 +84,18 @@ const CreateSensorModal = ({
                     }
                   })
                 }
+                sx={{
+                  '& .MuiOutlinedInput-notchedOutline': {
+                    borderColor: 'rgba(255, 255, 255, 0.63)',
+                  },
+                  '& .MuiInputLabel-root': {
+                    color: 'rgba(255, 255, 255, 0.63)',
+                  },
+                  '& .MuiOutlinedInput-input': {
+                    color: 'rgba(255, 255, 255, 0.63)',
+                  },
+                  margin: '12px',
+                }}
               />
               <TextField
                 label="Unidad"
@@ -103,6 +114,18 @@ const CreateSensorModal = ({
                     }
                   })
                 }
+                sx={{
+                  '& .MuiOutlinedInput-notchedOutline': {
+                    borderColor: 'rgba(255, 255, 255, 0.63)',
+                  },
+                  '& .MuiInputLabel-root': {
+                    color: 'rgba(255, 255, 255, 0.63)',
+                  },
+                  '& .MuiOutlinedInput-input': {
+                    color: 'rgba(255, 255, 255, 0.63)',
+                  },
+                  margin: '12px',
+                }}
               />
               <TextField
                 label="Temperatura promedio"
@@ -121,6 +144,18 @@ const CreateSensorModal = ({
                     }
                   })
                 }
+                sx={{
+                  '& .MuiOutlinedInput-notchedOutline': {
+                    borderColor: 'rgba(255, 255, 255, 0.63)',
+                  },
+                  '& .MuiInputLabel-root': {
+                    color: 'rgba(255, 255, 255, 0.63)',
+                  },
+                  '& .MuiOutlinedInput-input': {
+                    color: 'rgba(255, 255, 255, 0.63)',
+                  },
+                  margin: '12px',
+                }}
               />
               <TextField
                 label="Temperatura mínima"
@@ -139,6 +174,18 @@ const CreateSensorModal = ({
                     }
                   })
                 }
+                sx={{
+                  '& .MuiOutlinedInput-notchedOutline': {
+                    borderColor: 'rgba(255, 255, 255, 0.63)',
+                  },
+                  '& .MuiInputLabel-root': {
+                    color: 'rgba(255, 255, 255, 0.63)',
+                  },
+                  '& .MuiOutlinedInput-input': {
+                    color: 'rgba(255, 255, 255, 0.63)',
+                  },
+                  margin: '12px',
+                }}
               />
             </Grid>
           </Grid>
@@ -149,7 +196,7 @@ const CreateSensorModal = ({
           </Button>
           <Button className={styles.successButton}
             variant="contained"
-            onClick={() => { crearEstacion() }}
+            onClick={() => { crearSensor() }}
           >
             Crear
           </Button>

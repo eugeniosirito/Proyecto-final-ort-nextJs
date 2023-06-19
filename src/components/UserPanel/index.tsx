@@ -14,7 +14,6 @@ import { dateFormatted } from '../../utils/dateFormatted'
 import { deleteSensorOnClick, editarEstacion } from './utils';
 
 const UserPanel = () => {
-  const router = useRouter();
   const [eliminarActivo, setEliminarActivo] = useState(false);
   const [sensorWarningActivo, setSensorWarningActivo] = useState(false);
   const [sensorModalActivo, setSensorModalActivo] = useState(false);
@@ -79,7 +78,7 @@ const UserPanel = () => {
       .catch(error => {
         console.log(error);
       });
-  }, []);
+  }, [eliminarActivo, isEditando]);
 
   const eliminarEstacion = (idEstacion: string) => {
     const returnDeletePromise = () => {
@@ -88,7 +87,6 @@ const UserPanel = () => {
           const resultado = await deleteEstacion(idEstacion);
           resolve(resultado)
           setIsLoading(false);
-          router.reload();
           console.log('eliminada correctamente', resultado);
         } catch (error) {
           console.log(error);
@@ -119,10 +117,6 @@ const UserPanel = () => {
       value: sensorEdit?.description?.value
     },
     {
-      label: 'Pertenece a',
-      value: sensorEdit?.station_id
-    },
-    {
       label: 'Fecha de creación',
       value: sensorEdit?.dateCreated
     },
@@ -147,11 +141,6 @@ const UserPanel = () => {
   const handleCloseSensorSummary = () => {
     setSensorModalActivo(false);
   }
-
-  const handleOpenModalCreateSensor = () => {
-    setCreateSensorModalActivo(true);
-  }
-
   const handleCloseModalCreateSensor = () => {
     setCreateSensorModalActivo(false);
   }
@@ -205,11 +194,8 @@ const UserPanel = () => {
     />
   );
 
-
   return (
     <>
-      {/* <Typography paddingX={3} paddingY={2} color={'white'} variant='h3' textAlign={'center'}>Vista de usuario</Typography>
-      <Divider variant="middle" sx={{ backgroundColor: 'rgba(255, 255, 255, 0.73)', paddingLeft: '12px', marginY: '12px' }} /> */}
       <Grid container display={'flex'} justifyContent={'center'}>
         {isLoading ? (
           <Grid style={{ transform: 'translate(0%, 250%)' }}>
@@ -289,7 +275,7 @@ const UserPanel = () => {
                               ))}
                             </Grid>
                             <Grid paddingTop={3}>
-                              <Button style={{ marginRight: '12px' }} size="large" onClick={() => { editarEstacion(item.id, estacionEdit) }} variant="contained" className={styles.loadingButtonStatic}>
+                              <Button style={{ marginRight: '12px' }} size="large" onClick={() => { editarEstacion(item.id, estacionEdit), setIsEditando(false) }} variant="contained" className={styles.loadingButtonStatic}>
                                 Editar
                               </Button>
                               <Button size="large" onClick={() => { setIsEditando(false) }} variant="contained" className={styles.loadingButtonStatic}>
