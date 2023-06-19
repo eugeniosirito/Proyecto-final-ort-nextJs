@@ -4,12 +4,11 @@ import { Grid, Button, Typography, CircularProgress } from '@mui/material'
 import styles from './styles.module.css';
 import { getEstaciones } from '@/services';
 
-
 const HomePage = () => {
+
 
   const [isLoading, setIsLoading] = useState(false);
   const [estaciones, setEstaciones] = useState({});
-
 
   useEffect(() => {
     getEstaciones()

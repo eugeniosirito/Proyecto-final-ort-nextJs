@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext, useState } from 'react'
 import MenuIcon from '@mui/icons-material/Menu';
 import styles from './styles.module.css';
 import { AppBar, Toolbar, IconButton, Typography, Button, Grid, Box, styled, alpha, InputBase, Menu, MenuItem, Badge } from '@mui/material'
@@ -8,8 +8,11 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import respirar from '../../assets/Respirar2.png'
 import Image from 'next/image';
+import AppContext from '@/context/appContext';
 
 const Header = () => {
+  const context = useContext(AppContext);
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
@@ -131,8 +134,8 @@ const Header = () => {
             </Grid>
             <Box sx={{ flexGrow: 1 }} />
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-              <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                <Badge badgeContent={4} color="error">
+              <IconButton size="large" aria-label="show 4 new mails" color="inherit" onClick={() => context.setStationLenght({})}>
+                <Badge badgeContent={context.stationLenght.length} color="error">
                   <EmailIcon />
                 </Badge>
               </IconButton>
@@ -141,7 +144,7 @@ const Header = () => {
                 aria-label="show 17 new notifications"
                 color="inherit"
               >
-                <Badge badgeContent={17} color="error">
+                <Badge badgeContent={context.stationLenght.length} color="error">
                   <NotificationsIcon />
                 </Badge>
               </IconButton>
