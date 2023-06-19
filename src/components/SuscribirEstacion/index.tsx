@@ -7,6 +7,7 @@ import { IngresoEstacionValues } from "@/utils/interfaces";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
 import Router from "next/router";
+import { ToastContainer, Slide } from 'react-toastify';
 
 const SuscribirEstacion = () => {
   const [isButtonDisable, setIsButtonDisable] = useState(true);
@@ -42,7 +43,7 @@ const SuscribirEstacion = () => {
       value: '',
     },
     location: {
-      coordinates: [],
+      coordinates: ["0", "0"],
       metadata: {},
     },
     user: {
@@ -284,6 +285,7 @@ const SuscribirEstacion = () => {
             resolve(resultado)
             setStationId(resultado.id)
             console.log(resultado, "post correcto");
+            console.log(ingresoEstacion, "post correcto");
           } catch (error) {
             console.error(error);
             reject(error)
@@ -483,8 +485,8 @@ const SuscribirEstacion = () => {
                 </Grid>
               ) :
                 <Grid container className={styles.inputsContainer}>
+                  <Typography variant="h4" color={'rgba(255, 255, 255, 0.63)'} pt={4}>Resumen de la estación creada.</Typography>
                   <Grid display={'flex'} justifyContent={'center'} container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 4 }} padding={8}>
-                    <Typography variant="h4" color={'rgba(255, 255, 255, 0.63)'} paddingBottom={4}>Resumen de la estación creada.</Typography>
                     <Accordion style={{ backgroundColor: 'rgb(12, 52, 110)', boxShadow: '2px 3px 6px 0px #000', padding: '12px' }}>
                       <AccordionSummary
                         expandIcon={<ExpandMore color="info" />}
@@ -543,11 +545,11 @@ const SuscribirEstacion = () => {
                         </Grid>
                       </AccordionDetails>
                     </Accordion>
-                    <Grid paddingTop={3} marginTop={4}>
-                      <Button size="large" variant="contained" onClick={handleClick} className={styles.loadingButtonStatic} style={{ width: '200px' }}>
-                        {isLoading ? <CircularProgress color="inherit" /> : 'Ver estaciones'}
-                      </Button>
-                    </Grid>
+                  </Grid>
+                  <Grid>
+                    <Button size="large" variant="contained" onClick={handleClick} className={styles.loadingButtonStatic} style={{ width: '200px' }}>
+                      {isLoading ? <CircularProgress color="inherit" /> : 'Ver estaciones'}
+                    </Button>
                   </Grid>
                 </Grid>
               )

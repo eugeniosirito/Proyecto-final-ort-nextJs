@@ -23,6 +23,14 @@ export const deleteEstacion = async (id: string) => {
   return data;
 };
 
+export const patchEstacion = async (id: string, bodyEditado: any) => {
+  const { data } = await axios.patch(
+    `http://localhost:3000/stations/${id}`,
+    bodyEditado
+  );
+  return data;
+};
+
 /* SENSORES */
 
 export const postSensor = async (sensor: any) => {

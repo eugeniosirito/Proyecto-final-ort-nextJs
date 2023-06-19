@@ -5,13 +5,28 @@
   padding: 12px;
 }
 
+.edicionContainer {
+  opacity: 0.5;
+  transition: ease-in-out 2s;
+}
+
 .accordionContainer:hover {
   background-color: rgb(9, 39, 84);
+}
+
+.successButton {
+  background-color: #249613;
+  border-radius: 12px;
+}
+
+.successButton:hover {
+  background-color: #1d730f;
 }
 
 .classicButton {
   background-color: #2659bf;
   margin-right: 14px;
+  border-radius: 18px;
 }
 
 .classicButton:hover {
@@ -21,10 +36,12 @@
 .warningButton {
   background-color: #bb7300;
   margin-right: 14px;
+  border-radius: 18px;
 }
 
 .errorButton {
   background-color: #aa2626;
+  border-radius: 18px;
 }
 
 .warningButton:hover {
