@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Layout from '@/components/Layout/layout'
 import ControlPanelV2 from '@/components/ControlPanel'
 import LinearProgessCustom from '@/components/LinearProgressCustom'
+import VideoBackground from '@/components/VideoComponent';
 
 export default function AddStation() {
 
@@ -14,6 +15,7 @@ export default function AddStation() {
         <div className='page-animation'>
           <ControlPanelV2 />
         </div>
+        <VideoBackground />
       </Layout>
     </>
   )

@@ -6,6 +6,7 @@ import HomePage from '@/components/Home'
 import SideMenu from '@/components/SideMenu'
 import styles from '../components/Layout/styles.module.css'
 import LinearProgessCustom from '@/components/LinearProgressCustom'
+import VideoBackground from '../components/VideoComponent'
 
 export default function Home() {
   const [startProgress, setStartProgress] = useState(false);
@@ -33,6 +34,7 @@ export default function Home() {
         </Grid>
         <Footer />
       </Grid>
+      <VideoBackground />
     </div>
   )
 }

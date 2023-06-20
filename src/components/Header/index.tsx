@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
 import MenuIcon from '@mui/icons-material/Menu';
-import styles from './styles.module.css';
+import router from 'next/router';
 import { AppBar, Toolbar, IconButton, Typography, Button, Grid, Box, styled, alpha, InputBase, Menu, MenuItem, Badge } from '@mui/material'
 import EmailIcon from '@mui/icons-material/Email';
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -36,6 +36,10 @@ const Header = () => {
   const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
+
+  const redirectTo = () => {
+    router.push('/control-panel-admin');
+  }
 
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
@@ -134,7 +138,7 @@ const Header = () => {
             </Grid>
             <Box sx={{ flexGrow: 1 }} />
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-              <IconButton size="large" aria-label="show 4 new mails" color="inherit" onClick={() => context.setStationLenght({})}>
+              <IconButton size="large" aria-label="show 4 new mails" color="inherit" onClick={() => { context.setStationLenght({}), redirectTo() }}>
                 <Badge badgeContent={context.stationLenght.length} color="error">
                   <EmailIcon />
                 </Badge>

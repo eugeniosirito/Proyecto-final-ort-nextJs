@@ -3,6 +3,7 @@ import SuscribirEstacion from '@/components/SuscribirEstacion'
 import Layout from '@/components/Layout/layout'
 import { ToastContainer, Slide } from 'react-toastify';
 import LinearProgessCustom from '@/components/LinearProgressCustom';
+import VideoBackground from '@/components/VideoComponent';
 
 
 export default function AddStation() {
@@ -28,6 +29,7 @@ export default function AddStation() {
           pauseOnHover
           theme="colored"
         />
+        <VideoBackground />
       </Layout>
     </>
   )

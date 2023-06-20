@@ -3,7 +3,7 @@ import Layout from '@/components/Layout/layout'
 import UserPanel from '@/components/UserPanel'
 import LinearProgessCustom from '@/components/LinearProgressCustom';
 import { Slide, ToastContainer } from 'react-toastify';
-import { Grid } from '@mui/material';
+import VideoBackground from '@/components/VideoComponent';
 
 export default function AddStation() {
   const [startProgress, setStartProgress] = useState(false);
@@ -28,6 +28,7 @@ export default function AddStation() {
           pauseOnHover
           theme="colored"
         />
+        <VideoBackground />
       </Layout>
     </>
   )

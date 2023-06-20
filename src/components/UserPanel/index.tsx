@@ -110,19 +110,19 @@ const UserPanel = () => {
   const resumenSensorFields = [
     {
       label: 'ID',
-      value: sensorEdit?.id
+      value: 'sensorEdit?.id'
     },
     {
       label: 'Descripción',
-      value: sensorEdit?.description?.value
+      value: 'sensorEdit?.description?.value'
     },
     {
       label: 'Fecha de creación',
-      value: sensorEdit?.dateCreated
+      value: 'sensorEdit?.dateCreated'
     },
     {
       label: 'Fecha de modificación',
-      value: sensorEdit?.dateModified
+      value: 'sensorEdit?.dateModified'
     },
   ];
 
@@ -223,11 +223,11 @@ const UserPanel = () => {
                         </Grid>
                         <Grid item paddingRight={1}>
                           <Chip
-                            label={item.stationState === 'IN_APPROVAL' ? 'Pendiente de aprobación' : item.stationState === 'ACEPTADO' ? 'Aceptado' : 'Rechazado'}
+                            label={item.stationState === 'IN_APPROVAL' ? 'Pendiente de aprobación' : item.stationState === 'ENABLED' ? 'Aceptada' : 'Rechazado'}
                             sx={{ fontWeight: 'bold', fontSize: '14px' }}
                             className={clsx({
                               'color-chip-warning': item.stationState === 'IN_APPROVAL',
-                              'color-chip-success': item.stationState === 'ACEPTADO',
+                              'color-chip-success': item.stationState === 'ENABLED',
                               'color-chip-error': item.stationState === 'RECHAZADO',
                             })}
                           />

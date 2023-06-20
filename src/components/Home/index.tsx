@@ -28,19 +28,26 @@ const HomePage = () => {
 
   return (
     <>
-      <Grid display={'flex'} flexDirection={'column'} style={{ transform: 'translateY(20%)' }}>
-        <Typography variant='h5' color='rgba(255, 255, 255, 0.63)'>No tenes ninguna estación inscripta, hace click en el siguiente botón para empezar.</Typography>
-        <Button className={styles.buttonRegisterStation}
-          size='large'
-          variant="contained"
-          sx={{ marginTop: '20px' }}
-          onClick={() => {
-            handleClick();
-            setIsLoading(true)
-          }}
-        >
-          {isLoading ? <CircularProgress color="inherit" /> : 'Registrar'}
-        </Button>
+      <Grid container display={'flex'} justifyContent={'flex-start'} flexDirection={'column'} pt={25}>
+        <Grid>
+          <Typography color={'white'} variant='h4' textAlign={'center'}>Bienvenido al proyecto RespirAR</Typography>
+        </Grid>
+        <Grid display={'flex'} flexDirection={'column'} justifyContent={'center'}>
+          <Typography variant='h5' color='white' textAlign={'center'}>No tenes ninguna estación inscripta, hace click en el siguiente botón para empezar.</Typography>
+          <Grid display={'flex'} justifyContent={'center'}>
+            <Button className={styles.buttonRegisterStation}
+              size='large'
+              variant="contained"
+              sx={{ marginTop: '20px' }}
+              onClick={() => {
+                handleClick();
+                setIsLoading(true)
+              }}
+            >
+              {isLoading ? <CircularProgress color="inherit" /> : 'Registrar estación'}
+            </Button>
+          </Grid>
+        </Grid>
       </Grid>
     </>
   )
