@@ -1,40 +1,35 @@
-import { useState } from 'react'
-import { Grid } from '@mui/material'
-import Footer from '@/components/Footer'
-import Header from '@/components/Header'
-import HomePage from '@/components/Home'
-import SideMenu from '@/components/SideMenu'
-import styles from '../components/Layout/styles.module.css'
-import LinearProgessCustom from '@/components/LinearProgressCustom'
-import VideoBackground from '../components/VideoComponent'
+import React, { useState } from 'react';
+import Layout from '@/components/Layout/layout'
+import UserPanel from '@/components/UserPanel'
+import LinearProgessCustom from '@/components/LinearProgressCustom';
+import { Slide, ToastContainer } from 'react-toastify';
+import VideoBackground from '@/components/VideoComponent';
 
-export default function Home() {
+export default function AddStation() {
   const [startProgress, setStartProgress] = useState(false);
 
   return (
-    <div>
+    <>
       <LinearProgessCustom startProgress={startProgress} />
-      <Header />
-      <Grid container>
-        <Grid
-          item
-          lg={1.5}
-          md={2}
-          sm={3}
-          xs={3}
-          display={"flex"}
-          flexDirection={"column"}
-          sx={{ backgroundColor: "rgb(22, 48, 88)", height: "100vh", boxShadow: '2px 3px 6px 0px #000' }}
-          className={styles.sideMenuContainer}
-        >
-          <SideMenu setStartProgress={setStartProgress} />
-        </Grid>
-        <Grid item lg={10.5} md={10} sm={9} xs={12} display={'flex'} justifyContent={'center'}>
-          <HomePage />
-        </Grid>
-        <Footer />
-      </Grid>
-      <VideoBackground />
-    </div>
+      <Layout setStartProgress={setStartProgress}>
+        <div className='page-animation'>
+          <UserPanel />
+        </div>
+        <ToastContainer
+          transition={Slide}
+          position="bottom-left"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+        />
+        <VideoBackground />
+      </Layout>
+    </>
   )
 }

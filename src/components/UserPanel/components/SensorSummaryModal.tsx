@@ -41,6 +41,9 @@ const SensorSummaryModal = ({
           </Grid>
         </DialogContent>
         <DialogActions style={{ backgroundColor: 'rgb(9, 39, 84)' }}>
+          <Button style={{ marginRight: '0' }} className={styles.classicButton} variant="contained" onClick={handleCloseSensorSummary}>
+            Cerrar
+          </Button>
           <Button style={{ marginRight: '0' }} className={styles.warningButton} variant="contained" onClick={handleCloseSensorSummary}>
             Editar
           </Button>
@@ -49,9 +52,6 @@ const SensorSummaryModal = ({
             onClick={() => { handleCloseSensorSummary(), deleteSensorOnClick(sensorEdit.sensors[0].id) }}
           >
             Eliminar
-          </Button>
-          <Button style={{ marginRight: '0' }} className={styles.classicButton} variant="contained" onClick={handleCloseSensorSummary}>
-            Cerrar
           </Button>
         </DialogActions>
       </Dialog>

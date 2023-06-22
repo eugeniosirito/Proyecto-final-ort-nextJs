@@ -7,6 +7,7 @@ import { IngresoEstacionValues } from "@/utils/interfaces";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
 import Router from "next/router";
+import { dateFormatted } from "@/utils/dateFormatted";
 
 const SuscribirEstacion = () => {
   const [isButtonDisable, setIsButtonDisable] = useState(true);
@@ -233,27 +234,35 @@ const SuscribirEstacion = () => {
       value: resumenEstacion.user
     },
     {
+      label: 'Descripción',
+      value: resumenEstacion.description.value,
+    },
+    {
       label: 'Coordenadas/Locación',
       value: resumenEstacion.location,
     },
     {
       label: 'Fecha de creación',
-      value: resumenEstacion.dateCreated,
+      value: dateFormatted(resumenEstacion.dateCreated),
     },
   ];
 
   const resumenSensorFields = [
     {
-      label: 'Nombre',
-      value: resumenEstacion.user
+      label: 'Descripción',
+      value: 'Descripcion'
     },
     {
-      label: 'Coordenadas/Locación',
-      value: resumenEstacion.location,
+      label: 'Unidad',
+      value: 'Unidad',
     },
     {
-      label: 'Fecha de creación',
-      value: resumenEstacion.dateCreated,
+      label: 'Temp minima',
+      value: 'Temp minima',
+    },
+    {
+      label: 'Temp maxima',
+      value: 'Temp maxima',
     },
   ];
 
@@ -318,7 +327,7 @@ const SuscribirEstacion = () => {
   /* Redirects to the user panel */
 
   const handleClick = () => {
-    Router.push('/control-panel-user');
+    Router.push('/');
     setIsLoading(true);
   };
 
@@ -371,7 +380,7 @@ const SuscribirEstacion = () => {
             <React.Fragment>
               {activeStep === 0 ? (
                 <Grid container className={styles.inputsContainer}>
-                  <Typography textAlign={'center'} variant="h4" paddingTop={4} color={'white'}>Ingrese su estación</Typography>
+                  <Typography textAlign={'center'} variant="h4" paddingTop={4} color={'white'}>Ingrese los datos de su estación</Typography>
                   <Grid display={'flex'} justifyContent={'center'} container rowSpacing={2} paddingTop={6} >
                     {ingresoEstacionFields.map((field, index) => (
                       <Tooltip key={index} title={field.tooltip.value} placement={'top'} arrow TransitionComponent={Zoom}>
@@ -420,6 +429,18 @@ const SuscribirEstacion = () => {
                           }
                         })
                       }
+                      sx={{
+                        '& .MuiOutlinedInput-notchedOutline': {
+                          borderColor: 'rgba(255, 255, 255, 0.63)',
+                        },
+                        '& .MuiInputLabel-root': {
+                          color: 'rgba(255, 255, 255, 0.63)',
+                        },
+                        '& .MuiOutlinedInput-input': {
+                          color: 'rgba(255, 255, 255, 0.63)',
+                        },
+                        margin: '12px'
+                      }}
                     />
                     <TextField
                       label="Unidad"
@@ -438,6 +459,18 @@ const SuscribirEstacion = () => {
                           }
                         })
                       }
+                      sx={{
+                        '& .MuiOutlinedInput-notchedOutline': {
+                          borderColor: 'rgba(255, 255, 255, 0.63)',
+                        },
+                        '& .MuiInputLabel-root': {
+                          color: 'rgba(255, 255, 255, 0.63)',
+                        },
+                        '& .MuiOutlinedInput-input': {
+                          color: 'rgba(255, 255, 255, 0.63)',
+                        },
+                        margin: '12px'
+                      }}
                     />
                     <TextField
                       label="Temperatura promedio"
@@ -456,6 +489,18 @@ const SuscribirEstacion = () => {
                           }
                         })
                       }
+                      sx={{
+                        '& .MuiOutlinedInput-notchedOutline': {
+                          borderColor: 'rgba(255, 255, 255, 0.63)',
+                        },
+                        '& .MuiInputLabel-root': {
+                          color: 'rgba(255, 255, 255, 0.63)',
+                        },
+                        '& .MuiOutlinedInput-input': {
+                          color: 'rgba(255, 255, 255, 0.63)',
+                        },
+                        margin: '12px'
+                      }}
                     />
                     <TextField
                       label="Temperatura mínima"
@@ -474,6 +519,18 @@ const SuscribirEstacion = () => {
                           }
                         })
                       }
+                      sx={{
+                        '& .MuiOutlinedInput-notchedOutline': {
+                          borderColor: 'rgba(255, 255, 255, 0.63)',
+                        },
+                        '& .MuiInputLabel-root': {
+                          color: 'rgba(255, 255, 255, 0.63)',
+                        },
+                        '& .MuiOutlinedInput-input': {
+                          color: 'rgba(255, 255, 255, 0.63)',
+                        },
+                        margin: '12px'
+                      }}
                     />
                   </Grid>
                   <Grid paddingTop={3}>

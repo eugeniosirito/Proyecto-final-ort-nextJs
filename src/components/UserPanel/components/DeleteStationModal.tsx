@@ -8,7 +8,8 @@ const DeleteStationModal = ({
   eliminarEstacion,
   handleCloseSensorModalWarning,
   handleOpenSensorSummary,
-  idstation
+  idstation,
+  setEstacionID
 }: any) => {
   return (
     <>
@@ -45,7 +46,10 @@ const DeleteStationModal = ({
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseSensorModalWarning}>Cancelar</Button>
-            <Button onClick={handleOpenSensorSummary}>Ver sensores</Button>
+            <Button onClick={() => {
+              handleOpenSensorSummary()
+              setEstacionID(idstation)
+            }}>Ver sensores</Button>
           </DialogActions>
         </Dialog>
       )

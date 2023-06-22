@@ -1,14 +1,16 @@
 import React, { useContext, useState } from 'react'
 import MenuIcon from '@mui/icons-material/Menu';
 import router from 'next/router';
-import { AppBar, Toolbar, IconButton, Typography, Button, Grid, Box, styled, alpha, InputBase, Menu, MenuItem, Badge } from '@mui/material'
+import { AppBar, Toolbar, IconButton, Grid, Box, Menu, MenuItem, Badge } from '@mui/material'
 import EmailIcon from '@mui/icons-material/Email';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import respirar from '../../assets/Respirar2.png'
+import logoRespirar from '../../assets/logoRespirar.png'
 import Image from 'next/image';
 import AppContext from '@/context/appContext';
+import styles from './styles.module.css';
+
 
 const Header = () => {
   const context = useContext(AppContext);
@@ -38,7 +40,7 @@ const Header = () => {
   };
 
   const redirectTo = () => {
-    router.push('/control-panel-admin');
+    router.push('/');
   }
 
   const menuId = 'primary-search-account-menu';
@@ -117,7 +119,7 @@ const Header = () => {
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static" style={{ backgroundColor: 'rgb(36, 83, 148)', borderBottom: '1px solid white', boxShadow: '2px 3px 6px 0px #000' }}>
+        <AppBar position="static" style={{ backgroundColor: 'rgb(12, 52, 110)', borderBottom: '1px solid rgb(167, 211, 147)', boxShadow: '2px 3px 6px 0px #000' }}>
           <Toolbar>
             <IconButton
               size="large"
@@ -126,14 +128,15 @@ const Header = () => {
               aria-label="open drawer"
               sx={{ mr: 2 }}
             >
-              <MenuIcon />
+              {/* <MenuIcon /> */}
             </IconButton>
-            <Grid>
+            <Grid className={styles.imageContainer}>
               <Image
-                src={respirar}
+                src={logoRespirar}
                 alt="RespirAR"
-                height={20}
-                width={100}
+                height={40}
+                width={110}
+                onClick={redirectTo}
               />
             </Grid>
             <Box sx={{ flexGrow: 1 }} />

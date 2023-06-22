@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Accordion, AccordionDetails, AccordionSummary, Button, Chip, CircularProgress, Divider, Grid, TextField, Tooltip, Typography, Zoom } from '@mui/material';
 import styles from './styles.module.css';
-import { deleteEstacion, deleteSensor, getEstaciones, getSensor, patchEstacion } from '@/services';
+import { deleteEstacion, getEstaciones } from '@/services';
 import { ExpandMore } from '@mui/icons-material';
 import clsx from 'clsx';
-import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import DeleteStationModal from './components/DeleteStationModal';
 import SensorSummaryModal from './components/SensorSummaryModal';
@@ -12,8 +11,13 @@ import CreateSensorModal from './components/CreateSensorModal';
 import 'react-toastify/dist/ReactToastify.css'
 import { dateFormatted } from '../../utils/dateFormatted'
 import { deleteSensorOnClick, editarEstacion } from './utils';
+import AppContext from '@/context/appContext';
+import Router from 'next/router';
+import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded';
+import EditRoundedIcon from '@mui/icons-material/EditRounded';
 
 const UserPanel = () => {
+  const context = useContext(AppContext);
   const [eliminarActivo, setEliminarActivo] = useState(false);
   const [sensorWarningActivo, setSensorWarningActivo] = useState(false);
   const [sensorModalActivo, setSensorModalActivo] = useState(false);
@@ -110,19 +114,19 @@ const UserPanel = () => {
   const resumenSensorFields = [
     {
       label: 'ID',
-      value: 'sensorEdit?.id'
+      value: 'Sensor_5'
     },
     {
       label: 'Descripción',
-      value: 'sensorEdit?.description?.value'
+      value: 'Sensor de humedad'
     },
     {
       label: 'Fecha de creación',
-      value: 'sensorEdit?.dateCreated'
+      value: '21/06/2023'
     },
     {
       label: 'Fecha de modificación',
-      value: 'sensorEdit?.dateModified'
+      value: '21/06/2023'
     },
   ];
 
@@ -201,6 +205,28 @@ const UserPanel = () => {
           <Grid style={{ transform: 'translate(0%, 250%)' }}>
             <CircularProgress size={'80px'} />
           </Grid>
+        ) : context.stationLenght.length == 0 ? (
+          <Grid container display={'flex'} justifyContent={'flex-start'} flexDirection={'column'} pt={25}>
+            <Grid>
+              <Typography color={'white'} variant='h4' textAlign={'center'}>Bienvenido al proyecto RespirAR</Typography>
+            </Grid>
+            <Grid display={'flex'} flexDirection={'column'} justifyContent={'center'}>
+              <Typography variant='h5' color='white' textAlign={'center'}>No tenes ninguna estación inscripta, hace click en el siguiente botón para empezar.</Typography>
+              <Grid display={'flex'} justifyContent={'center'}>
+                <Button className={styles.classicButton}
+                  size='large'
+                  variant="contained"
+                  sx={{ marginTop: '20px' }}
+                  onClick={() => {
+                    Router.push('/addstation');
+                    setIsLoading(true)
+                  }}
+                >
+                  {isLoading ? <CircularProgress color="inherit" /> : 'Registrar estación'}
+                </Button>
+              </Grid>
+            </Grid>
+          </Grid>
         ) : (
           <Grid item lg={12} paddingX={3} paddingTop={3} className='pageAnimation-containers'>
             {estaciones.map((item, indice) => (
@@ -223,13 +249,16 @@ const UserPanel = () => {
                         </Grid>
                         <Grid item paddingRight={1}>
                           <Chip
-                            label={item.stationState === 'IN_APPROVAL' ? 'Pendiente de aprobación' : item.stationState === 'ENABLED' ? 'Aceptada' : 'Rechazado'}
-                            sx={{ fontWeight: 'bold', fontSize: '14px' }}
+                            label={
+                              item.stationState === 'IN_APPROVAL' ? 'Pendiente de aprobación'
+                                : item.stationState === 'ENABLED' ? 'Aceptada'
+                                  : 'Rechazado'}
                             className={clsx({
                               'color-chip-warning': item.stationState === 'IN_APPROVAL',
                               'color-chip-success': item.stationState === 'ENABLED',
-                              'color-chip-error': item.stationState === 'RECHAZADO',
+                              'color-chip-error': item.stationState === 'REJECTED',
                             })}
+                            sx={{ fontWeight: 'bold', fontSize: '14px' }}
                           />
                         </Grid>
                       </Grid>
@@ -248,8 +277,8 @@ const UserPanel = () => {
                       ) : (
                         <>
                           <Grid container display={'flex'} justifyContent={'center'} className={'pageAnimation-containers'}>
-                            <Typography textAlign={'center'} variant="h4" color={'white'}>Ingrese su estación</Typography>
-                            <Grid display={'flex'} justifyContent={'center'} container rowSpacing={2} paddingTop={6} >
+                            <Typography textAlign={'center'} variant="h4" color={'white'}>Ingrese los datos a editar</Typography>
+                            <Grid display={'flex'} justifyContent={'center'} container rowSpacing={2} paddingTop={4} >
                               {ingresoEstacionFields.map((field, index) => (
                                 <Tooltip key={index} title={field.tooltip.value} placement={'top'} arrow TransitionComponent={Zoom}>
                                   <TextField
@@ -274,11 +303,11 @@ const UserPanel = () => {
                                 </Tooltip>
                               ))}
                             </Grid>
-                            <Grid paddingTop={3}>
-                              <Button style={{ marginRight: '12px' }} size="large" onClick={() => { editarEstacion(item.id, estacionEdit), setIsEditando(false) }} variant="contained" className={styles.loadingButtonStatic}>
+                            <Grid paddingTop={2}>
+                              <Button size="large" onClick={() => { editarEstacion(item.id, estacionEdit), setIsEditando(false) }} variant="contained" className={styles.classicButton}>
                                 Editar
                               </Button>
-                              <Button size="large" onClick={() => { setIsEditando(false) }} variant="contained" className={styles.loadingButtonStatic}>
+                              <Button size="large" onClick={() => { setIsEditando(false) }} variant="contained" className={styles.classicButton}>
                                 Cancelar
                               </Button>
                             </Grid>
@@ -302,15 +331,19 @@ const UserPanel = () => {
                           }}>
                           {item.sensors.length > 0 ? 'Ver sensores' : 'Agregar sensor'}
                         </Button>
-                        <Button size="large" variant="contained" className={styles.warningButton} onClick={() => setIsEditando(true)}>
-                          Editar
-                        </Button>
-                        <Button size="large" variant="contained" className={styles.errorButton} onClick={() => {
-                          setEliminarActivo(true),
-                            setEstacionID(item.id)
-                        }}>
-                          Eliminar
-                        </Button>
+                        <Tooltip placement={'top'} arrow TransitionComponent={Zoom} title={'Editar'}>
+                          <Button size="large" variant="contained" className={styles.warningButton} onClick={() => setIsEditando(true)}>
+                            <EditRoundedIcon />
+                          </Button>
+                        </Tooltip>
+                        <Tooltip placement={'top'} arrow TransitionComponent={Zoom} title={'Eliminar'}>
+                          <Button size="large" variant="contained" className={styles.errorButton} onClick={() => {
+                            setEliminarActivo(true),
+                              setEstacionID(item.id)
+                          }}>
+                            <DeleteForeverRoundedIcon />
+                          </Button>
+                        </Tooltip>
                       </Grid>
                     ) : ''}
                   </Accordion>
@@ -323,6 +356,7 @@ const UserPanel = () => {
                   handleCloseSensorModalWarning={handleCloseSensorModalWarning}
                   handleOpenSensorSummary={handleOpenSensorSummary}
                   idstation={estacionID}
+                  setEstacionID={setEstacionID}
                 />
                 <SensorSummaryModal
                   sensorModalActivo={sensorModalActivo}

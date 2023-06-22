@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Accordion, AccordionDetails, AccordionSummary, Button, Chip, CircularProgress, Divider, Grid, TextField, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Button, Chip, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Grid, TextField, Typography } from '@mui/material';
 import styles from './styles.module.css';
-import { getEstaciones } from '@/services';
+import { getEstacion, getEstaciones, patchEstacion } from '@/services';
 import { ExpandMore } from '@mui/icons-material';
 import { dateFormatted } from '@/utils/dateFormatted';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'
+
 
 const AdminPanel = () => {
 
@@ -18,29 +21,28 @@ const AdminPanel = () => {
       0,
       0
     ],
-    sensors: [
-      {
-        station_id: '',
-        description: {
-          value: '',
-          metadata: {}
-        },
-        id: ''
-      },
-      {
-        station_id: '',
-        description: {
-          value: '',
-          metadata: {}
-        },
-        id: ''
-      }
-    ],
     stationState: '',
     dateCreated: '',
     dateModified: ''
   }]);
+
+  const [estacionPatch, setEstacionPatch] = useState([{
+    description: {
+      value: '',
+      metadata: {}
+    },
+    location: {
+      coordinates: []
+    },
+    stationState: {
+      value: "ENABLED"
+    }
+  }]);
+
   const [isLoading, setIsLoading] = useState(true);
+  const [openModalAprobar, setOpenModalAprobar] = useState(false);
+  const [openModalRechazar, setOpenModalRechazar] = useState(false);
+  const [estacionId, setEstacionId] = useState('');
 
   useEffect(() => {
     getEstaciones()
@@ -52,7 +54,43 @@ const AdminPanel = () => {
       .catch(error => {
         console.log(error);
       });
-  }, []);
+  }, [openModalAprobar, openModalRechazar]);
+
+  const patchStation = (idEstacion: string, body: any) => {
+    const returnPatchEstacion = () => {
+      return new Promise(async (resolve, reject) => {
+        try {
+          const resultado = patchEstacion(idEstacion, body);
+          resolve(resultado)
+          setIsLoading(false);
+          console.log('estacion modificada', resultado);
+        } catch (error) {
+          console.log(error);
+          reject(error);
+        }
+      })
+    }
+
+    toast.promise(
+      returnPatchEstacion,
+      {
+        pending: 'Aceptando',
+        success: 'Se cambió el estado correctamente👌',
+        error: 'Ha occurido un error, vuelva a intentar mas tarde 🤯'
+      }
+    )
+  };
+
+  const getEstacionSeleccionada = (id: string) => {
+    getEstacion(id)
+      .then(response => {
+        setEstacionPatch(response)
+        console.log("STATION PATCH TEST", response)
+      })
+      .catch(error => {
+        console.log(error);
+      })
+  };
 
   const renderTextField = (label: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactFragment | React.ReactPortal | null | undefined, value: unknown) => (
     <TextField
@@ -75,8 +113,6 @@ const AdminPanel = () => {
 
   return (
     <>
-      <Typography paddingX={3} paddingY={2} color={'white'} variant='h3' textAlign={'center'}>Vista de administrador</Typography>
-      <Divider variant="middle" sx={{ backgroundColor: 'rgba(255, 255, 255, 0.73)', paddingLeft: '12px', marginY: '12px' }} />
       <Grid container display={'flex'} justifyContent={'center'}>
         {isLoading ? (
           <Grid style={{ transform: 'translate(0%, 250%)' }}>
@@ -120,14 +156,88 @@ const AdminPanel = () => {
                         </Grid>
                       </AccordionDetails>
                       <Grid paddingTop={3} display={'flex'} justifyContent={'flex-end'}>
-                        <Button size="large" variant="contained" className={styles.successButton}>
+                        <Button size="large" variant="contained" className={styles.successButton}
+                          onClick={() => {
+                            setOpenModalAprobar(true);
+                            setEstacionId(item.id)
+                          }}>
                           Aprobar
                         </Button>
-                        <Button size="large" variant="contained" className={styles.errorButton}>
+                        <Button size="large" variant="contained" className={styles.errorButton}
+                          onClick={() => {
+                            setOpenModalRechazar(true);
+                            setEstacionId(item.id)
+                          }}>
                           Rechazar
                         </Button>
                       </Grid>
                     </Accordion>
+                    <Dialog
+                      open={openModalAprobar}
+                      keepMounted
+                      onClose={() => setOpenModalAprobar(false)}
+                      aria-describedby="alert-dialog-slide-description"
+                    >
+                      <DialogTitle>{"¿Está seguro que desea aprobar esta estación?"}</DialogTitle>
+                      <DialogContent>
+                        <DialogContentText id="alert-dialog-slide-description">
+                          La estación pasara al estado aprobada.
+                        </DialogContentText>
+                      </DialogContent>
+                      <DialogActions>
+                        <Button onClick={() => setOpenModalAprobar(false)}>No, mejor no.</Button>
+                        <Button onClick={() => {
+                          patchStation(estacionId,
+                            {
+                              description: {
+                                metadata: {},
+                                value: item.description.value
+                              },
+                              location: {
+                                coordinates: item.location
+                              },
+                              stationState: {
+                                value: "ENABLED"
+                              }
+                            }
+                          )
+                          setOpenModalAprobar(false)
+                        }}>Si, aprobar.</Button>
+                      </DialogActions>
+                    </Dialog>
+                    <Dialog
+                      open={openModalRechazar}
+                      keepMounted
+                      onClose={() => setOpenModalRechazar(false)}
+                      aria-describedby="alert-dialog-slide-description"
+                    >
+                      <DialogTitle>{"¿Está seguro que desea rechazar esta estación?"}</DialogTitle>
+                      <DialogContent>
+                        <DialogContentText id="alert-dialog-slide-description">
+                          La estación pasara al estado rechazada.
+                        </DialogContentText>
+                      </DialogContent>
+                      <DialogActions>
+                        <Button onClick={() => setOpenModalRechazar(false)}>No, mejor no.</Button>
+                        <Button onClick={() => {
+                          patchStation(estacionId,
+                            {
+                              description: {
+                                metadata: {},
+                                value: item.description.value
+                              },
+                              location: {
+                                coordinates: item.location
+                              },
+                              stationState: {
+                                value: "REJECTED"
+                              }
+                            }
+                          )
+                          setOpenModalRechazar(false)
+                        }}>Si, rechazar.</Button>
+                      </DialogActions>
+                    </Dialog>
                   </>
                 ) : null}
               </>

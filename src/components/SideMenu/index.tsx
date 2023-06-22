@@ -9,20 +9,20 @@ const SideMenu = ({ setStartProgress }: any) => {
 
   const links = [
     {
-      name: 'Dashboard',
-      path: '/dashboard'
+      name: 'Home',
+      path: '/'
     },
     {
       name: 'Agreagar estación',
       path: '/addstation'
     },
     {
-      name: 'Panel de Administrador',
-      path: '/control-panel-admin'
+      name: 'Dashboard',
+      path: '/dashboard'
     },
     {
-      name: 'Panel de Usuario',
-      path: '/control-panel-user'
+      name: 'Panel de Administrador',
+      path: '/control-panel-admin'
     },
   ]
 
@@ -37,7 +37,7 @@ const SideMenu = ({ setStartProgress }: any) => {
               </ListItemIcon>
               <Link onClick={() => {
                 setStartProgress(true)
-              }} href={item.path} className={styles.listBtnColor}>{item.name}</Link>
+              }} href={item.path} className={styles.listBtnColor} style={{ color: 'rgb(167, 211, 147)' }}>{item.name}</Link>
             </ListItem>
           ))}
         </List>

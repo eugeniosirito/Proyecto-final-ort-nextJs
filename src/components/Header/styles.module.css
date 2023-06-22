@@ -1,0 +1,9 @@
+.imageContainer {
+  opacity: 0.6;
+}
+
+.imageContainer:hover {
+  opacity: 1;
+  transition: ease-in-out 0.1s;
+  cursor: pointer;
+}

@@ -76,8 +76,8 @@ const SignUp = () => {
         >
           {!isSignUp ? (
             <>
-              <Typography color={'white'} variant='h5' paddingBottom={1}>Get started</Typography>
-              <Typography color={'white'} textAlign={'center'} paddingBottom={1}>Start creating the best possible user experience for you customers</Typography>
+              <Typography color={'white'} variant='h5' paddingBottom={1}>RespirAR</Typography>
+              <Typography color={'white'} textAlign={'center'} paddingBottom={1}>Ingrese sus datos para completar el registro.</Typography>
               <Grid container>
                 {signUpData.map((item, i) => (
                   <Grid item md={12} key={i} paddingBottom={'24px'}>
