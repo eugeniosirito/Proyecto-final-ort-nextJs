@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card, CardActions, CardContent, Grid, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material';
+import { Card, CardContent, Grid, MenuItem, Select, Typography } from '@mui/material';
 import DoughnutChart from '../Charts/DoughnutChart';
 import LineChart from '../Charts/LineChart';
 import styles from './styles.module.css';
-import VectorMapV2 from '../VectorMapV2';
-import { getEstaciones } from '@/services';
-import { IngresoEstacionValues } from '@/utils/interfaces';
-
+import { getEstacion, getEstaciones } from '@/services';
+import { Map, Marker } from "pigeon-maps"
 const DashCards = () => {
 
   const [selectedValue, setSelectedValue] = useState('');
@@ -43,6 +41,19 @@ const DashCards = () => {
     dateCreated: '',
     dateModified: ''
   }]);
+  const [estacionSelected, setEstacionSelected] = useState({
+    id: '',
+    user: '',
+    description: {
+      value: '',
+      metadata: {}
+    },
+    location: [0, 0],
+    sensors: [],
+    stationState: '',
+    dateCreated: '',
+    dateModified: ''
+  })
 
   /* llama al get estaciones apenas se renderiza la pantalla */
   useEffect(() => {
@@ -55,6 +66,17 @@ const DashCards = () => {
         console.log(error);
       });
   }, []);
+
+  useEffect(() => {
+    getEstacion(selectedValue)
+      .then(response => {
+        setEstacionSelected(response);
+        console.log('estación seleccionada', estacionSelected);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }, [selectedValue]);
 
   const testCards = [
     {
@@ -133,7 +155,14 @@ const DashCards = () => {
       <Grid container lg={12}>
         <Grid container lg={7} paddingLeft={2} paddingY={2} paddingRight={3}>
           <Grid item lg={12} md={12} style={{ height: '300px' }} className={styles.boxShadowCss}>
-            <VectorMapV2 />
+            <Map defaultCenter={[-34.5179, -58.4897]} defaultZoom={3}>
+              <Marker width={50} anchor={estacionSelected.location}
+                color={estacionSelected.stationState === 'ENABLED' ? 'green' : estacionSelected.stationState === 'REJECTED' ? 'red' : 'yellow'}
+                onClick={({ event: HTMLMouseEvent, anchor: Point, payload: any }) => {
+                  console.log(estacionSelected.id, estacionSelected.location)
+                }}
+              />
+            </Map>
           </Grid>
         </Grid>
         <Grid container lg={5} rowSpacing={{ lg: 1, sm: 2, xs: 2 }} columnSpacing={{ lg: 1, md: 2 }} paddingLeft={2} paddingY={2}

@@ -1,31 +1,31 @@
 import axios from "axios";
 
 export const getEstaciones = async () => {
-  const { data } = await axios.get("http://localhost:3000/stations");
+  const { data } = await axios.get("http://localhost:3005/stations");
   return data;
 };
 
 export const getEstacion = async (id: string) => {
-  const { data } = await axios.get(`http://localhost:3000/stations/${id}`);
+  const { data } = await axios.get(`http://localhost:3005/stations/${id}`);
   return data;
 };
 
 export const postEstacion = async (estacion: any) => {
   const { data } = await axios.post(
-    "http://localhost:3000/stations/",
+    "http://localhost:3005/stations/",
     estacion
   );
   return data;
 };
 
 export const deleteEstacion = async (id: string) => {
-  const { data } = await axios.delete(`http://localhost:3000/stations/${id}`);
+  const { data } = await axios.delete(`http://localhost:3005/stations/${id}`);
   return data;
 };
 
 export const patchEstacion = async (id: string, bodyEditado: any) => {
   const { data } = await axios.patch(
-    `http://localhost:3000/stations/${id}`,
+    `http://localhost:3005/stations/${id}`,
     bodyEditado
   );
   return data;
@@ -34,16 +34,16 @@ export const patchEstacion = async (id: string, bodyEditado: any) => {
 /* SENSORES */
 
 export const postSensor = async (sensor: any) => {
-  const { data } = await axios.post("http://localhost:3000/sensors/", sensor);
+  const { data } = await axios.post("http://localhost:3005/sensors/", sensor);
   return data;
 };
 
 export const getSensor = async (id: string) => {
-  const { data } = await axios.get(`http://localhost:3000/sensors/${id}`);
+  const { data } = await axios.get(`http://localhost:3005/sensors/${id}`);
   return data;
 };
 
 export const deleteSensor = async (id: string) => {
-  const { data } = await axios.delete(`http://localhost:3000/sensors/${id}`);
+  const { data } = await axios.delete(`http://localhost:3005/sensors/${id}`);
   return data;
 };
